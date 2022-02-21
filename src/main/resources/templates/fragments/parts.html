@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:fragment="headerfiles">
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>title</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Londrina+Solid&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500&family=IBM+Plex+Sans:wght@600&family=Viga&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Display:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rancho&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/799254cd45.js" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+<div th:fragment="headerEx">
+    <nav class="navbar navbar-expand-lg  navigation p-0 navbar-light">
+        <a class="navbar-brand brand ml-5" href="/recipes">
+            <div class="row">
+                <div class="col-4 me-0 pe-0">
+                    <picture class="align-text-top m-0 p-0">
+                        <source srcset="/images/vegetables.png" media="(min-width:650px)">
+                        <source srcset="/images/vegetables.png" media="(min-width:465px)">
+                        <img src="/images/vegetables.png" alt="desc">
+                    </picture>
+                </div>
+                <div class="col-8 me-0 pe-0 pl-3 pt-4 desktop-view">
+                    <div class="row add">
+                        <div class="col-12 title pl-4">Recipes Guide:</div>
+                    </div>
+                    <div class="row add">
+                        <div class="col-12 title pl-4">Taste The Joy</div>
+
+                    </div>
+                </div>
+            </div>
+
+        </a>
+        <div class="container">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_nav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-center" id="main_nav">
+                <ul class="navbar-nav">
+                    <li class="nav-item menu-item "><a class="nav-link " href="/recipes"> <span
+                            class="text">Home</span>
+                    </a></li>
+                    <li class="nav-item dropdown menu-item ">
+                        <a class="nav-link" href="#" data-bs-toggle="dropdown"> <span
+                                class="text">Meals</span> </a>
+                        <ul class="dropdown-menu dropdown-menu-end fade-up dd-list">
+                            <li>
+                                <a class="dropdown-item dd-item" href="broadway.html">Breakfast</a></li>
+                            <li><a class="dropdown-item dd-item" href="music.html">Lunch</a></li>
+                            <li><a class="dropdown-item dd-item" href="galas.html">Dinner</a></li>
+                            <li><a class="dropdown-item dd-item" href="sports.html">Dessert</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown menu-item">
+                        <a class="nav-link" href="#" data-bs-toggle="dropdown"> <span class="text">Cuisine</span> </a>
+                        <ul class="dropdown-menu dropdown-menu-end fade-up dd-list2 ">
+                            <li>
+                                <a class="dropdown-item dd-item" href="parks.html">American</a></li>
+                            <li><a class="dropdown-item dd-item" href="gardens.html">Chinese</a></li>
+                            <li><a class="dropdown-item dd-item" href="zoos.html">Indian</a></li>
+
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown menu-item ">
+                        <a class="nav-link" href="#" data-bs-toggle="dropdown"> <span
+                                class="text">Healthy lifestyle</span> </a>
+                        <ul class="dropdown-menu dropdown-menu-end fade-up dd-list">
+                            <li>
+                                <a class="dropdown-item dd-item" href="manhattan.html">Vegan</a></li>
+                            <li><a class="dropdown-item dd-item" href="brooklyn.html">Vegetarian</a></li>
+                            <li><a class="dropdown-item dd-item" href="bronx.html">Keto</a></li>
+                            <li><a class="dropdown-item dd-item" href="queens.html">Low-carb</a></li>
+
+
+                        </ul>
+                    </li>
+
+                    <li class="nav-item menu-item " th:if="${#request.getRemoteUser() != null}"><a class="nav-link "
+                                                                                                   href="/recipes"> <span
+                            class="text" style="color: indianred">My recipes</span>
+                    </a></li>
+
+                </ul>
+
+            </div>
+
+
+        </div>
+
+        <div class="mr-4" th:if="${#request.getRemoteUser() == null}">
+            <a class="nav-link " href="/login"> <span
+                    class="text login-item hover-underline-animation">Login/Register</span>
+            </a>
+        </div>
+        <div class="" th:if="${#request.getRemoteUser() != null}">
+            <span class="text user-present">Hello, <span th:text="${#request.getRemoteUser()}" class="d-inline"></span></span>
+
+        </div>
+
+
+    </nav>
+</div>
+<div th:fragment="header">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/home">Recipes Web App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+                    aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item m-auto">
+                        <a class="nav-link active" href="/home">Home</a>
+                    </li>
+                    <li class="nav-item m-auto">
+                        <a class="nav-link active" href="/recipes">All recipes</a>
+                    </li>
+
+                </ul>
+
+                <form class="form-inline my-2 my-lg-0">
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" aria-label="Small"
+                               aria-describedby="inputGroup-sizing-sm"
+                               placeholder="Search...">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-secondary btn-number">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <a class="btn btn-primary btn-sm ml-3" href="/logout">
+                        <i class="fa fa-shopping-cart"></i> Logout
+                    </a>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div th:fragment="footer">
+    <footer class="text-black-50 mt-xl-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-lg-4 col-xl-3">
+                    <h5>About </h5>
+                    <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
+                    <p class="mb-0">
+                        Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant
+                        impression.
+                    </p>
+                </div>
+
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto">
+                    <h5>Informations</h5>
+                    <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
+                    <ul class="list-unstyled">
+                        <li><a href="">Link 1</a></li>
+                        <li><a href="">Link 2</a></li>
+                        <li><a href="">Link 3</a></li>
+                        <li><a href="">Link 4</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto">
+                    <h5>Others links</h5>
+                    <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
+                    <ul class="list-unstyled">
+                        <li><a href="">Link 1</a></li>
+                        <li><a href="">Link 2</a></li>
+                        <li><a href="">Link 3</a></li>
+                        <li><a href="">Link 4</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 col-lg-3 col-xl-3">
+                    <h5>Contact</h5>
+                    <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-home mr-2"></i> My company</li>
+                        <li><i class="fa fa-envelope mr-2"></i> email@example.com</li>
+                        <li><i class="fa fa-phone mr-2"></i> + 33 12 14 15 16</li>
+                        <li><i class="fa fa-print mr-2"></i> + 33 12 14 15 16</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

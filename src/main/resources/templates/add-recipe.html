@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="fragments/parts.html :: headerfiles">
+
+</head>
+
+<body>
+<div th:replace="fragments/parts.html :: headerEx"></div>
+
+<h1 class="h1"> Add new recipe</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <form action="/recipes/addRecipe" method="POST">
+                <div class="form-group">
+                    <label for="title">Recipe title</label>
+                    <input type="text"
+                           class="form-control"
+                           id="title"
+                           name="title"
+                           required
+                           placeholder="Enter product name">
+                </div>
+                <div class="form-group">
+                    <label for="desc">Recipe description</label>
+                    <input type="text"
+                           class="form-control"
+                           id="desc"
+                           name="desc"
+                           placeholder="Description">
+                </div>
+
+                <div class="form-group">
+                    <label>Meal</label>
+                    <select name="meal" class="form-control">
+
+                        <option
+                                th:each="meal : ${meals}"
+                                th:value="${meal.getId()}"
+                                th:text="${meal.getName()}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cuisine</label>
+                    <select name="cuisine" class="form-control">
+
+                        <option
+                                th:each="cuisine : ${cuisines}"
+                                th:value="${cuisine.getId()}"
+                                th:text="${cuisine.getName()}">
+                        </option>
+                    </select>
+                </div>
+                <div>Special Considerations</div>
+                <div class="form-group" th:each="sc : ${specs}">
+
+                    <label>
+                        <input type="checkbox" name="cons" class="form-control form-check-input "
+                               th:text="${sc.getName()}" th:value="${sc.getId()}">
+                    </label>
+
+                </div>
+
+                <div class="form-group">
+                    <div>Ingredients</div>
+                    <input type="number" name="ingredientsQuantity" class="form-control m-input" min="0">
+                    <select name="measurementItem" class="form-control">
+
+                        <option
+                                th:each="measurement : ${measurements}"
+                                th:value="${measurement.toString()}"
+                                th:text="${measurement.toString()}">
+                        </option>
+                    </select>
+                    <input type="text" name="ingredients" class="form-control m-input" placeholder="Enter title" autocomplete="off">
+                    <div id="newRowIngr"></div>
+                    <button id="addRowIngr" type="button" class="btn btn-info">Add Row</button>
+
+                </div>
+
+
+                <div>Prep time</div>
+                <div class="form-group">
+
+                    <div class="row">
+                        <input type="number" class="form-control col-4 ml-4 mr-2" id="prep" min="0"
+                               name="prep" placeholder="hours">
+
+                        <input type="number" class="form-control col-4" id="prepMin" name="prepMin" min="0" max="59"
+                               placeholder="mins">
+                    </div>
+                </div>
+
+
+                <div>Cook time</div>
+                <div class="form-group">
+
+                    <div class="row">
+                        <input type="number" class="form-control col-4 ml-4 mr-2" id="cook" min="0"
+                               name="cook" placeholder="hours">
+
+                        <input type="number" class="form-control col-4" id="cookMin" name="cookMin" min="0" max="59"
+                               placeholder="mins">
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="keywords">Keywords</label>
+                    <input type="text"
+                           class="form-control"
+                           id="keywords"
+                           name="keywords"
+                           placeholder="Keywords">
+                </div>
+
+                <div class="form-group">
+                    <label for="keywords">Upload image</label>
+                    <input type="file" multiple
+                           class="form-control"
+                           id="image"
+                           name="image"
+                           placeholder="Keywords">
+                </div>
+                <div class="form-group">
+                    <div>Instructions</div>
+
+                    <input type="text" name="instructions" class="form-control m-input" placeholder="Enter title" autocomplete="off">
+                    <div id="newRow"></div>
+                    <button id="addRow" type="button" class="btn btn-info">Add Row</button>
+
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript" th:inline="javascript">
+    // add row
+    $("#addRow").click(function () {
+
+        var html = '';
+        html += '<div id="inputFormRow">';
+        html += '<div class="input-group mb-3">';
+        html += '<input type="text" name="instructions" class="form-control m-input" placeholder="Enter title" autocomplete="off">';
+        html += '<div class="input-group-append">';
+        html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>';
+        html += '</div>';
+        html += '</div>';
+
+        $('#newRow').append(html);
+    });
+
+    // remove row
+    $(document).on('click', '#removeRow', function () {
+        $(this).closest('#inputFormRow').remove();
+    });
+
+    $("#addRowIngr").click(function () {
+
+        var modelAttributeValue = [[${measurements}]];
+        console.log(modelAttributeValue.length);
+        var html = '';
+        html += '<div id="inputFormRow">';
+        html += '<div class="input-group mb-3">';
+        html += '<input type="number" name="ingredientsQuantity" class="form-control m-input" min="0">';
+        html += '<select name="measurementItem" class="form-control">';
+
+        var i;
+        for( i=0;i<modelAttributeValue.length;i++){
+            var itemM=modelAttributeValue[i];
+            console.log(itemM);
+            var opt=document.createElement("option");
+            opt.setAttribute("value",itemM.toString());
+            opt.text=itemM.toString();
+            console.log(opt.outerHTML);
+            html+=opt.outerHTML;
+        }
+        html+='</select>';
+        html+='<input type="text" name="ingredients" class="form-control m-input" placeholder="Enter title" autocomplete="off">';
+        html += '<div class="input-group-append">';
+        html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>';
+        html += '</div>';
+        html += '</div>';
+
+        $('#newRowIngr').append(html);
+    });
+
+    // remove row
+    $(document).on('click', '#removeRow', function () {
+        $(this).closest('#inputFormRow').remove();
+    });
+</script>
+<th:block th:replace="fragments/parts.html :: footer"></th:block>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
