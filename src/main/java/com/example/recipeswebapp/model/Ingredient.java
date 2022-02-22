@@ -19,4 +19,10 @@ public class Ingredient {
 
     public Ingredient(){}
 
+    public Ingredient(String name,Double quantity, Measurement measurement){
+        this.name=name;
+        this.quantity=quantity;
+        this.measurement=measurement;
+    }
+
 }

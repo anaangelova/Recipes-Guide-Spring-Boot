@@ -15,4 +15,9 @@ public class Image {
     private Recipe recipeOwner;
 
     public Image(){}
+
+    public Image(String title, Recipe recipeOwner){
+        this.title=title;
+        this.recipeOwner=recipeOwner;
+    }
 }

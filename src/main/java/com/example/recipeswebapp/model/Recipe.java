@@ -3,8 +3,10 @@ package com.example.recipeswebapp.model;
 
 import com.example.recipeswebapp.model.Identity.RecipeAuthor;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,6 +21,7 @@ public class Recipe {
     @ManyToMany
     private List<Ingredient> ingredients;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
     private List<Instruction> instructions;
 
@@ -30,6 +33,7 @@ public class Recipe {
     @ManyToOne
     private RecipeAuthor author;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "recipeOwner")
     private List<Image> images;
 
@@ -42,6 +46,10 @@ public class Recipe {
     @Enumerated(value = EnumType.STRING)
     private RecipeStatus status;
 
+    private Double prepInMins;
+    private Double cookInMins;
+
+    private LocalDateTime dateCreated;
 
 
 }

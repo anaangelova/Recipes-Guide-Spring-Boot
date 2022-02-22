@@ -34,9 +34,35 @@
         transform: rotateX(0deg);
     }
 }
+.cat{
+    height: 7vw;
+    width: 7vw;
 
+}
+.table-textMyRecipes{
+    font-family: "Rubik",sans-serif;
+    font-weight: bold;
+    font-size: 1.2vw;
+}
+
+.tableTextInf{
+    font-family: "Rubik",sans-serif;
+    color: black;
+    text-transform: uppercase;
+}
+.my-recipes-text{
+    font-family: 'Xanh Mono', monospace;
+    font-size: 2.7vw;
+    font-weight: bold;
+    color: darkgreen;
+}
+.image-tumbnail{
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+}
 body {
-    background-color: rgba(253, 250, 250, 0.46);
+    background-color: white;
 }
 
 .brand {

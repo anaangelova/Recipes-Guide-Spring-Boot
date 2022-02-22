@@ -7,18 +7,19 @@
 <body>
 <div th:replace="fragments/parts.html :: headerEx"></div>
 
-<h1 class="h1"> Add new recipe</h1>
+<h1 class="h1"> Edit recipe</h1>
 
 <div class="container">
     <div class="row">
         <div class="col-md-5">
-            <form action="/recipes/addRecipe" method="POST"  enctype="multipart/form-data">
+            <form action="/recipes/editRecipe" method="POST"  enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">Recipe title</label>
                     <input type="text"
                            class="form-control"
                            id="title"
                            name="title"
+                           th:value="(${recipe} != null ? ${recipe.getTitle()} : '')"
                            required
                            placeholder="Enter product name">
                 </div>
@@ -28,14 +29,17 @@
                            class="form-control"
                            id="desc"
                            name="description"
+                           required
+                           th:value="(${recipe} != null ? ${recipe.getDescription()} : '')"
                            placeholder="Description">
                 </div>
 
                 <div class="form-group">
                     <label>Meal</label>
-                    <select name="meal" class="form-control">
+                    <select name="meal" class="form-control" required>
 
                         <option
+                                th:selected="${recipe.getMeal() != null && recipe.getMeal().getId() == meal.getId()}"
                                 th:each="meal : ${meals}"
                                 th:value="${meal.getId()}"
                                 th:text="${meal.getName()}">
@@ -44,9 +48,10 @@
                 </div>
                 <div class="form-group">
                     <label>Cuisine</label>
-                    <select name="cuisine" class="form-control">
+                    <select name="cuisine" class="form-control" required>
 
                         <option
+                                th:selected="${recipe.getCuisine() != null && recipe.getCuisine().getId() == cuisine.getId()}"
                                 th:each="cuisine : ${cuisines}"
                                 th:value="${cuisine.getId()}"
                                 th:text="${cuisine.getName()}">
@@ -58,23 +63,30 @@
 
                     <label>
                         <input type="checkbox" name="considerations" class="form-control form-check-input "
-                               th:text="${sc.getName()}" th:value="${sc.getId()}">
+                               th:text="${sc.getName()}" th:value="${sc.getId()}"
+                                th:checked="${recipe.getConsiderations().contains(sc)}"
+                        >
                     </label>
 
                 </div>
 
                 <div class="form-group">
                     <div>Ingredients</div>
-                    <input type="number" name="ingredientQuantities" class="form-control m-input" min="0">
-                    <select name="ingredientMeasurements" class="form-control">
+                    <div th:each="ingr : ${recipe.getIngredients()}">
+                        <input type="number" name="ingredientQuantities" class="form-control m-input" min="0" th:value="${ingr.getQuantity()}">
+                        <select name="ingredientMeasurements" class="form-control">
 
-                        <option
-                                th:each="measurement : ${measurements}"
-                                th:value="${measurement.toString()}"
-                                th:text="${measurement.toString()}">
-                        </option>
-                    </select>
-                    <input type="text" name="ingredientNames" class="form-control m-input" placeholder="Enter title" autocomplete="off">
+                            <option
+                                    th:each="measurement : ${measurements}"
+                                    th:selected="${ingr.getMeasurement() != null && ingr.getMeasurement().toString()== measurement.toString()}"
+                                    th:value="${measurement.toString()}"
+                                    th:text="${measurement.toString()}">
+                            </option>
+                        </select>
+                        <input type="text" name="ingredientNames" class="form-control m-input" placeholder="Enter title" th:value="${ingr.getName()}" autocomplete="off">
+                        <br>
+                    </div>
+
                     <div id="newRowIngr"></div>
                     <button id="addRowIngr" type="button" class="btn btn-info">Add Row</button>
 
@@ -86,10 +98,10 @@
 
                     <div class="row">
                         <input type="number" class="form-control col-4 ml-4 mr-2" id="prep" min="0"
-                               name="prepH" placeholder="hours">
+                               name="prepH" placeholder="hours" th:value="${prepH}">
 
                         <input type="number" class="form-control col-4" id="prepMin" name="prepM" min="0" max="59"
-                               placeholder="mins">
+                               th:value="${recipe.getPrepInMins()%60}" placeholder="mins">
                     </div>
                 </div>
 
@@ -98,10 +110,10 @@
                 <div class="form-group">
 
                     <div class="row">
-                        <input type="number" class="form-control col-4 ml-4 mr-2" id="cook" min="0"
+                        <input type="number" class="form-control col-4 ml-4 mr-2" id="cook" min="0" step="1" th:value="${cookH}"
                                name="cookH" placeholder="hours">
 
-                        <input type="number" class="form-control col-4" id="cookMin" name="cookM" min="0" max="59"
+                        <input type="number" class="form-control col-4" id="cookMin" name="cookM" min="0" max="59"  th:value="${recipe.getCookInMins()%60}"
                                placeholder="mins">
                     </div>
                 </div>
@@ -114,28 +126,27 @@
                            class="form-control"
                            id="keywords"
                            name="tagList"
-                           placeholder="Keywords">
+                           placeholder="Keywords" th:value="${keywords}">
                 </div>
 
-                <div class="form-group">
-                    <label for="images">Upload image</label>
-                    <input type="file" multiple
-                           class="form-control"
-                           id="images"
-                           name="images"
-                           placeholder="Upload images">
-                </div>
+
                 <div class="form-group">
                     <div>Instructions</div>
+                    <div th:each="ins : ${recipe.getInstructions()}">
+                        <input type="text" name="instructions" class="form-control m-input" th:value="${ins.getDescription()}"
+                               placeholder="Enter title" autocomplete="off">
+                        <br>
 
-                    <input type="text" name="instructions" class="form-control m-input" placeholder="Enter title" autocomplete="off">
+                    </div>
                     <div id="newRow"></div>
                     <button id="addRow" type="button" class="btn btn-info">Add Row</button>
 
                 </div>
 
                 <input type="hidden" name="author" th:value="${#request.getRemoteUser()}">
+                <input type="hidden" name="recipeId" th:value="${recipe.getId()}">
                 <button type="submit" class="btn btn-primary">Submit</button>
+
 
             </form>
         </div>

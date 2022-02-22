@@ -16,4 +16,9 @@ public class Instruction {
     private Recipe recipe;
 
     public Instruction(){}
+
+    public Instruction(String description, Recipe recipe){
+        this.description=description;
+        this.recipe=recipe;
+    }
 }

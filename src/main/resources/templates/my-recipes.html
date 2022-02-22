@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+
+    <title>My recipes</title>
+    <th:block th:replace="fragments/parts.html :: headerfiles"></th:block>
+
+</head>
+
+<body>
+<th:block th:replace="fragments/parts.html :: headerEx"></th:block>
+<div class="container mb-4 mt-5">
+    <div class="my-recipes-text mb-2">My recipes</div>
+    <div class="row">
+        <div class="col-12" th:if="${recipes.size() > 0}">
+            <div class="table-responsive">
+                <table class="table table-hover ">
+                    <thead>
+                    <tr class="table-textMyRecipes text-center">
+                        <th scope="col">#</th>
+                        <th scope="col">Thumbnail</th>
+                        <th scope="col">Recipe Title</th>
+                        <th scope="col">Cuisine</th>
+                        <th scope="col">Meal</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Special Considerations</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="recipe, iStat : ${recipes}" class="text-center tableTextInf font-weight-lighter">
+                        <td th:text="${iStat.index+1}"></td>
+                        <td> <div class="cat text-center">
+                            <a th:href="@{'/recipes/details/{id}' (id=${recipe.getId()})}"><img th:src="@{${'/images/' + recipe.getImages().get(0).getTitle()}}" alt="..." class="image-tumbnail"></a>
+
+                        </div></td>
+                        <td th:text="${recipe.getTitle()}"></td>
+                        <td th:text="${recipe.getCuisine().name}"></td>
+                        <td th:text="${recipe.getMeal().name}"></td>
+                        <td th:text="${recipe.getStatus().toString()}" th:if="${recipe.getStatus().toString()=='APPROVED'}" class="text-success"></td>
+                        <td th:text="${recipe.getStatus().toString()}" th:if="${recipe.getStatus().toString()=='PENDING'}" class="text-warning"></td>
+                        <td th:text="${recipe.getStatus().toString()}" th:if="${recipe.getStatus().toString()=='DENIED'}" class="text-danger"></td>
+                        <td><span th:each="sc : ${recipe.getConsiderations()}" th:text="${sc.name}+' '"></span></td>
+                        <td>
+                            <th:block>
+                                <form th:action="@{'/recipes/details/{id}' (id=${recipe.getId()})}">
+                                    <button type="submit" class="btn btn-sm btn-warning text-white">
+                                        <i class="fa-solid fa-info"></i> Details</button>
+                                </form>
+                            </th:block>
+                        </td>
+                        <td>
+                            <th:block>
+                                <form th:action="@{'/recipes/delete/{id}' (id=${recipe.getId()})}"
+                                      th:method="DELETE">
+                                    <button type="submit" class="btn btn-sm btn-danger"><i
+                                            class="fa fa-trash"></i>Delete</button>
+                                </form>
+                            </th:block>
+                        </td>
+                        <td>
+                            <th:block>
+                                <a th:href="@{'/recipes/edit/{id}' (id=${recipe.getId()})}"
+                                   class="btn btn-sm btn-info"><i class="fa-solid fa-pen"></i>Edit</a>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col mb-3">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <a href="/recipes/addRecipe" class="btn btn-block btn-outline-success">ADD NEW RECIPE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/parts.html :: footer"></th:block>
+
+</body>
+</html>
