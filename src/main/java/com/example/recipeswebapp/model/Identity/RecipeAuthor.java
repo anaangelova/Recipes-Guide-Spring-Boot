@@ -39,21 +39,27 @@ public class RecipeAuthor implements UserDetails {
     private boolean isCredentialsNonExpired =  true;
     private boolean isEnabled = true;
 
+    //oAuth2
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+
     public RecipeAuthor(String username, String email, String password, String firstName, String lastName) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+
     }
 
-    public RecipeAuthor(String username, String email, String password, String firstName, String lastName, Role role) {
+    public RecipeAuthor(String username, String email, String password, String firstName, String lastName, Role role,  Provider provider) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
+        this.provider=provider;
     }
 
     public RecipeAuthor(){}

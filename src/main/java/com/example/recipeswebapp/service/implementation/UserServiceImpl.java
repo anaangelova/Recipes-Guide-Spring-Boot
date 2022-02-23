@@ -1,5 +1,7 @@
 package com.example.recipeswebapp.service.implementation;
 
+import com.example.recipeswebapp.config.CustomOAuth2User;
+import com.example.recipeswebapp.model.Identity.Provider;
 import com.example.recipeswebapp.model.Identity.RecipeAuthor;
 import com.example.recipeswebapp.model.Identity.Role;
 import com.example.recipeswebapp.repository.UserRepository;
@@ -9,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,7 +31,7 @@ public class UserServiceImpl implements UserService {
         if (username == null || username.isEmpty() || password == null || password.isEmpty())
             throw new IllegalArgumentException();
         if (password.equals(repeatPassword)) {
-            RecipeAuthor user = new RecipeAuthor(username,email, passwordEncoder.encode(password), firstName, lastName,role);
+            RecipeAuthor user = new RecipeAuthor(username,email, passwordEncoder.encode(password), firstName, lastName,role,Provider.LOCAL);
             //ako vekje ima takov user??? spored biznis logikata ne treba da go izbrisheme prethodniot korisnik! tuku ednostavno
             //ne treba da dozvolime da se vnese nov korisnik voopshto!
             if (userRepository.findByUsername(username).isPresent()) {
@@ -40,5 +45,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException(username));
+    }
+
+    public void processOAuthPostLogin(CustomOAuth2User oauthUser) {
+
+        Optional<RecipeAuthor> existUser = userRepository.findByEmail(oauthUser.getEmail());
+
+        if (existUser.isEmpty()) {
+            RecipeAuthor newUser = new RecipeAuthor();
+            newUser.setRole(Role.ROLE_USER);
+            newUser.setUsername(oauthUser.getName());
+            newUser.setEmail(oauthUser.getEmail());
+            newUser.setProvider(Provider.GOOGLE);
+            newUser.setEnabled(true);
+
+            userRepository.save(newUser);
+        }
+
     }
 }

@@ -14,9 +14,11 @@
         <form class="form-signin  mt-4 col-4 pr-0 pl-5" method="post" action="/login">
             <h2 class="form-signin-heading text-center login-title mb-0 pb-0">LOGIN</h2>
             <div class="text-center mb-4 mt-0">
-                <a class="btn btn-outline-dark rounded-circle mr-3" href="#"><i class="fa-brands fa-google"></i></a>
+                <a class="btn btn-outline-dark rounded-circle mr-3" th:href="@{/oauth2/authorization/google}"><i class="fa-brands fa-google"></i>
+
+                </a>
                 <a class="btn btn-outline-dark rounded-circle mr-3" href="#"><i class="fa-brands fa-twitter"></i></a>
-                <a class="btn btn-outline-dark rounded-circle" href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a class="btn btn-outline-dark rounded-circle"  th:href="@{/oauth2/authorization/facebook}"><i class="fa-brands fa-facebook-f"></i></a>
 
             </div>
 

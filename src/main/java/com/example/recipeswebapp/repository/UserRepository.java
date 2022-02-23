@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<RecipeAuthor,String> {
     Optional<RecipeAuthor> findByUsernameAndPassword(String username, String password);
     Optional<RecipeAuthor> findByUsername(String username);
+    Optional<RecipeAuthor> findByEmail(String email);
+
 }
