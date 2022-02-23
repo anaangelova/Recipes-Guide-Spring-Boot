@@ -2,10 +2,9 @@ package com.example.recipeswebapp.web;
 
 import com.example.recipeswebapp.model.*;
 import com.example.recipeswebapp.model.DTO.RecipeDTO;
-import com.example.recipeswebapp.service.interfaces.CuisineService;
-import com.example.recipeswebapp.service.interfaces.MealService;
-import com.example.recipeswebapp.service.interfaces.RecipeService;
-import com.example.recipeswebapp.service.interfaces.SpecialConsService;
+import com.example.recipeswebapp.model.Identity.RecipeAuthor;
+import com.example.recipeswebapp.model.Identity.Role;
+import com.example.recipeswebapp.service.interfaces.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -26,24 +24,25 @@ public class RecipesController {
     private final MealService mealService;
     private final CuisineService cuisineService;
     private final SpecialConsService specialConsService;
+    private final UserService userService;
 
     private final RecipeService recipeService;
-    public RecipesController(MealService mealService, CuisineService cuisineService, SpecialConsService specialConsService, RecipeService recipeService) {
+    public RecipesController(MealService mealService, CuisineService cuisineService, SpecialConsService specialConsService, UserService userService, RecipeService recipeService) {
         this.mealService = mealService;
         this.cuisineService = cuisineService;
         this.specialConsService = specialConsService;
+        this.userService = userService;
         this.recipeService = recipeService;
     }
 
     @GetMapping()
     public String getAllRecipes(Model model){
-        //zemi gi site recepti koi se approved i smesti gi vo 2 listi: trending now, most recent
+
         List<Recipe> mostRecent=recipeService.findAllRecipesApprovedAndMostRecent();
         List<Recipe> trending=recipeService.findAllRecipesApprovedAndTrending();
-        model.addAttribute("recents1",mostRecent.subList(0,4));
-        model.addAttribute("recents2",mostRecent.subList(4,8));
-        model.addAttribute("trendings1",trending.subList(0,4));
-        model.addAttribute("trendings2",trending.subList(4,8));
+        model.addAttribute("recents",mostRecent);
+        model.addAttribute("trendings",trending);
+
         return "recipes";
     }
 
@@ -81,14 +80,37 @@ public class RecipesController {
     @GetMapping("/details/{id}")
     public String getDetailsForRecipe(@PathVariable Long id,Model model){
         Recipe toShow=recipeService.findById(id).orElseThrow();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formatDateTime = toShow.getDateCreated().format(formatter);
         model.addAttribute("recipe",toShow);
-        return "details";
+        model.addAttribute("formatted",formatDateTime);
+        List<String> tmp=toShow.getIngredients().stream().map(i -> i.getFormatted()).collect(Collectors.toList());
+        List<String> instructions=toShow.getInstructions().stream().map(instr -> instr.getDescription()).collect(Collectors.toList());
+        model.addAttribute("allIngr",tmp);
+        model.addAttribute("allInstr",instructions);
+
+        Set<String> allTags=new TreeSet<>();
+        allTags.addAll(toShow.getTagList().stream().map(t -> t.getName()).collect(Collectors.toList()));
+        allTags.add(toShow.getMeal().getName());
+        allTags.add(toShow.getCuisine().getName());
+        allTags=allTags.stream().map(t -> t.toUpperCase()).collect(Collectors.toSet());
+        model.addAttribute("allTags",allTags);
+
+        return "recipeDetails";
 
     }
     @GetMapping("/myRecipes/{id}")
-    public String getUsersRecipes(@PathVariable String id,Model model){
+    public String getUsersRecipes(@PathVariable String id,Model model, HttpServletRequest request){
         List<Recipe> selectedRecipes=recipeService.findAllRecipesByUser(id);
         model.addAttribute("recipes",selectedRecipes);
+        RecipeAuthor author=(RecipeAuthor) userService.loadUserByUsername(request.getRemoteUser());
+        model.addAttribute("author",author);
+        if(author.getRole().equals(Role.ROLE_ADMIN)){
+            List<Recipe> pending=recipeService.findPendingPapers();
+            model.addAttribute("pending",pending);
+
+        }
+
         return "my-recipes";
     }
 
@@ -125,5 +147,29 @@ public class RecipesController {
         return "redirect:/recipes/myRecipes/"+author;
     }
 
+    @DeleteMapping("/delete/{id}")
+    public String deleteRecipe(@PathVariable Long id, HttpServletRequest request){
+
+        this.recipeService.deleteById(id);
+        return "redirect:/recipes/myRecipes/"+request.getRemoteUser();
+    }
+
+    @GetMapping("/addToSaved/{id}")
+    public String addToSaved(@PathVariable Long id, HttpServletRequest request){
+        if(request.getRemoteUser()==null){
+            return "redirect:/login";
+        }
+        recipeService.addRecipeToSaved(id,request.getRemoteUser());
+        return "redirect:/recipes";
+
+    }
+    //removeFromSaved
+    @GetMapping("/removeFromSaved/{id}")
+    public String removeFromSaved(@PathVariable Long id, HttpServletRequest request){
+
+        recipeService.removeFromSaved(id,request.getRemoteUser());
+        return "redirect:/recipes/myRecipes/"+request.getRemoteUser();
+
+    }
 
 }

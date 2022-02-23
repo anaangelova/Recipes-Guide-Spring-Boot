@@ -25,4 +25,8 @@ public class Ingredient {
         this.measurement=measurement;
     }
 
+    public String getFormatted(){
+        return String.format("%.0f %s %s",this.quantity,this.measurement.name(),this.name);
+    }
+
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
-<head >
+<head>
 
     <title>All recipes - Home page</title>
     <th:block th:replace="fragments/parts.html :: headerfiles"></th:block>
@@ -9,98 +9,57 @@
 
 <body>
 <div th:replace="fragments/parts.html :: headerEx"></div>
-<div class="container">
-    <h1 class="tryHere" style="font-family: 'Cookie', cursive"> All recipes are shown here</h1>
-
-    <a class="btn btn-success" href="/recipes/addRecipe">Add recipe</a>
-
-    <a class="btn btn-primary btn-sm ml-3" href="/logout">
-        Logout
-    </a>
-</div>
-
-<div class="container">
-    <p class="titles fw-bold mt-2 pt-3 ps-4 mb-0 ">Trending now</p>
-    <!--    Desktop version for Trending now section-->
-    <div id="carouselExampleControls" class="carousel slide mb-0 pb-3 big-screen pt-0" data-ride="carousel">
-        <div class="carousel-indicators mb-0">
-            <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="0" class="active indicate"
-                    aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" class="indicate" data-bs-target="#carouselExampleControls" data-bs-slide-to="1"
-                    aria-label="Slide 2"></button>
-        </div>
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="cards-wrapper ">
-                    <div class="card w-25" th:each="r : ${trendings1}">
-                        <img th:src="@{${'/images/' + r.getImages().get(0).getTitle()}}" class="card-img-top" alt="...">
-                        <div class="card-img-overlay position-relative mb-0 pb-0 ms-0 ps-0">
-                            <h5 class="card-title position-absolute bottom-50 p-2 caption" th:text="${r.getTitle()}"></h5>
-                        </div>
-                        <div class="card-body pt-0">
-                            <ul class="fa-ul card-text mb-2">
-                                <li class="card-infoS"><span class="fa-li" th:text="${r.getMeal().name}"><i
-                                        class="fas fa-music icon-color"></i></span>
-                                </li>
-                                <li class="card-infoS"><span class="fa-li" th:text="${r.getCuisine().name}"><i
-                                        class="far fa-calendar-alt icon-color"></i></span>
-                                </li>
-                                <li class="card-infoS"><span class="fa-li"><i
-                                        class="fas fas fa-map-marker-alt icon-color"></i></span>
-                                </li>
-                            </ul>
-                            <a th:href="@{'/recipes/detail/{id}' (id=${r.getId()})}"
-                               class=" btn text-secondary mt-1 ms-1 learn-more rounded-pill w-50"><span
-                                    class="learn-text">Details</span></a>
-                        </div>
-                    </div>
 
 
 
+<div class="containerRecipes  px-5 pb-5 pt-3 mt-3 ">
+    <h3 class="newestTitle pl-3 pt-3">Our newest recipes</h3>
+    <div class="d-flex justify-content-center">
+        <div class="w-100 mr-3 trans" th:each="rec : ${recents}">
+
+            <div class="card h-100 w-100 ">
+                <a th:href="@{'/recipes/details/{id}' (id=${rec.getId()})}">
+                    <img th:src="@{${'/images/' + rec.getImages().get(0).getTitle()}}" class="card-img-top rounded-0"
+                         alt="...">
+                </a>
+                <div class="card-body rounded-0 p-3">
+                    <p class="card-text meal m-0 p-0" th:text="${rec.getMeal().name}"></p>
+                    <h5 class="card-title recipeTitle" th:text="${rec.getTitle()}"></h5>
                 </div>
-            </div>
-            <div class="carousel-item">
-                <div class="cards-wrapper ">
-                    <div class="card w-25" th:each="r : ${trendings2}">
-                        <img th:src="@{${'/images/' + r.getImages().get(0).getTitle()}}" class="card-img-top" alt="...">
-                        <div class="card-img-overlay position-relative mb-0 pb-0 ms-0 ps-0">
-                            <h5 class="card-title position-absolute bottom-50 p-2 caption" th:text="${r.getTitle()}"></h5>
-                        </div>
-                        <div class="card-body pt-0">
-                            <ul class="fa-ul card-text mb-2">
-                                <li class="card-infoS"><span class="fa-li" th:text="${r.getMeal().name}"><i
-                                        class="fas fa-music icon-color"></i></span>
-                                </li>
-                                <li class="card-infoS"><span class="fa-li" th:text="${r.getCuisine().name}"><i
-                                        class="far fa-calendar-alt icon-color"></i></span>
-                                </li>
-                                <li class="card-infoS"><span class="fa-li"><i
-                                        class="fas fas fa-map-marker-alt icon-color"></i></span>Times Square
-                                </li>
-                            </ul>
-                            <a th:href="@{'/recipes/detail/{id}' (id=${r.getId()})}"
-                               class=" btn text-secondary mt-1 ms-1 learn-more rounded-pill w-50"><span
-                                    class="learn-text">Details</span></a>
-                        </div>
-                    </div>
-
-
+                <div class="card-footer">
+                    <p class="card-text authorInf pl-1" th:text="${'By: '+ rec.getAuthor().getUsername()}"></p>
+                    <a th:href="@{'/recipes/addToSaved/{id}' (id=${rec.getId()})}" class="btn btnSave rounded-pill px-3">Save <i
+                            class="fa-solid fa-bookmark"></i></a>
                 </div>
             </div>
 
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-                data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-                data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
 
+        </div>
     </div>
+    <h3 class="newestTitle pl-3" style="margin-top: 3vw;">Trending now</h3>
+    <div class="d-flex justify-content-center">
+        <div class="w-100 mr-3 trans" th:each="rec : ${trendings}">
+
+            <div class="card h-100 w-100 ">
+                <a th:href="@{'/recipes/details/{id}' (id=${rec.getId()})}">
+                <img th:src="@{${'/images/' + rec.getImages().get(0).getTitle()}}" class="card-img-top rounded-0"
+                     alt="...">
+                </a>
+                <div class="card-body rounded-0 p-3">
+                    <p class="card-text meal m-0 p-0" th:text="${rec.getMeal().name}"></p>
+                    <h5 class="card-title recipeTitle" th:text="${rec.getTitle()}"></h5>
+                </div>
+                <div class="card-footer">
+                    <p class="card-text authorInf pl-1" th:text="${'By: '+ rec.getAuthor().getUsername()}"></p>
+                    <a th:href="@{'/recipes/addToSaved/{id}' (id=${rec.getId()})}" class="btn btnSave rounded-pill px-3">Save <i
+                            class="fa-solid fa-bookmark"></i></a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
 </div>
 
 

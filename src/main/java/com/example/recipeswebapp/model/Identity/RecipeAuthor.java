@@ -30,6 +30,9 @@ public class RecipeAuthor implements UserDetails {
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     private List<Recipe> recipes;
 
+    @ManyToMany
+    private List<Recipe> savedRecipes;
+
     //security
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;

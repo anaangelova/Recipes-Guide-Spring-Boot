@@ -5,32 +5,55 @@
 </head>
 <body>
 <th:block th:replace="fragments/parts.html :: headerEx"></th:block>
-<div class="container">
-    <form class="form-signin mt-xl-5" method="post" action="/login">
-        <h2 class="form-signin-heading">Sign in now</h2>
-        <p>
-            <label for="username" class="sr-only">Username</label>
-            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required=""
-                   autofocus="">
-        </p>
-        <p>
-            <label for="password" class="sr-only">Password</label>
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password"
-                   required="">
-        </p>
-
-        <div th:if="${hasError}">
-            <div th:text="${error}" class="text-danger"></div>
+<div class="container formContainer mt-5 pb-0 px-0">
+    <div class="row justify-content-center mx-0 ">
+        <div class="col-7 divCont pr-0 mr-0 pl-0">
+            <img src="/images/bg_1.jpg" alt="..." class="imageLogin">
         </div>
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    </form>
-    <a href="/register" class="btn btn-block btn-light">Register here now</a>
+        <form class="form-signin  mt-4 col-4 pr-0 pl-5" method="post" action="/login">
+            <h2 class="form-signin-heading text-center login-title mb-0 pb-0">LOGIN</h2>
+            <div class="text-center mb-4 mt-0">
+                <a class="btn btn-outline-dark rounded-circle mr-3" href="#"><i class="fa-brands fa-google"></i></a>
+                <a class="btn btn-outline-dark rounded-circle mr-3" href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a class="btn btn-outline-dark rounded-circle" href="#"><i class="fa-brands fa-facebook-f"></i></a>
+
+            </div>
+
+            <p>
+                <label for="username" class="sr-only">Username</label>
+                <input type="text" id="username" name="username" class="form-control rounded-0 inputLogin pl-4 py-4"
+                       placeholder="Username" required=""
+                       autofocus="">
+            </p>
+            <p>
+                <label for="password" class="sr-only">Password</label>
+                <input type="password" id="password" name="password" class="form-control rounded-0 inputLogin pl-4 py-4"
+                       placeholder="Password"
+                       required="">
+            </p>
+
+            <div th:if="${hasError}">
+                <div th:text="${error}" class="text-danger"></div>
+            </div>
+            <div class="text-center row justify-content-center mt-2 mx-0">
+                <button class="btn col-6 rounded formBtn" type="submit">Sign in</button>
+            </div>
+            <div class="text-center row justify-content-center mt-2 mx-0">
+                <a href="/register" class="col-12 pr-0 text-dark" style="text-align: end; font-size: 0.9vw;">Don't have account? Register now!</a>
+            </div>
+
+        </form>
+
+        <div class="col-1 pl-0"></div>
+    </div>
+
 </div>
-<div class="targeted">some content</div>
 
 <th:block th:replace="fragments/parts.html :: footer"></th:block>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 
 </body>
 </html>

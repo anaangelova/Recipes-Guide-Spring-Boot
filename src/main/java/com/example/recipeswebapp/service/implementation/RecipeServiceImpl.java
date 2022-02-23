@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Paper;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -62,10 +63,10 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<Recipe> findAllRecipesApprovedAndTrending() {
-        List<Recipe> all=this.findAll();
+        List<Recipe> all=recipeRepository.findAllByStatus(RecipeStatus.APPROVED);
         Collections.shuffle(all);
-        if(all.size()>8)
-            return all.subList(0,8);
+        if(all.size()>4)
+            return all.subList(0,4);
         else return all;
 
     }
@@ -150,7 +151,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public void deleteById(Long id) {
-
+        recipeRepository.deleteById(id);
     }
 
     @Override
@@ -217,5 +218,33 @@ public class RecipeServiceImpl implements RecipeService {
         recipeRepository.save(addedRecipe);
         return Optional.of(addedRecipe);
 
+    }
+
+    @Override
+    public List<Recipe> findPendingPapers() {
+       return recipeRepository.findAllByStatus(RecipeStatus.PENDING);
+    }
+
+    @Transactional
+    @Override
+    public boolean addRecipeToSaved(Long recipeId, String username) {
+        Recipe toSave=this.findById(recipeId).orElseThrow();
+        RecipeAuthor author=userRepository.findByUsername(username).orElseThrow();
+        author.getSavedRecipes().removeIf(r -> r.equals(toSave));
+        author.getSavedRecipes().add(toSave);
+        userRepository.save(author);
+        recipeRepository.save(toSave); //do I need it?
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public boolean removeFromSaved(Long recipeId, String username) {
+        Recipe toRemove=this.findById(recipeId).orElseThrow();
+        RecipeAuthor author=userRepository.findByUsername(username).orElseThrow();
+        author.getSavedRecipes().remove(toRemove);
+        userRepository.save(author);
+        recipeRepository.save(toRemove); //do I need it?
+        return true;
     }
 }
