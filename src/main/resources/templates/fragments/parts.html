@@ -80,10 +80,11 @@
                                 class="text">Meals</span> </a>
                         <ul class="dropdown-menu dropdown-menu-end fade-up dd-list">
                             <li>
-                                <a class="dropdown-item dd-item" href="broadway.html">Breakfast</a></li>
-                            <li><a class="dropdown-item dd-item" href="music.html">Lunch</a></li>
-                            <li><a class="dropdown-item dd-item" href="galas.html">Dinner</a></li>
-                            <li><a class="dropdown-item dd-item" href="sports.html">Dessert</a></li>
+                                <a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'meal'} , val=${'breakfast'})}">Breakfast</a></li>
+
+                            <li><a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'meal'} , val=${'lunch'})}">Lunch</a></li>
+                            <li><a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'meal'} , val=${'dinner'})}">Dinner</a></li>
+                            <li><a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'meal'} , val=${'dessert'})}">Dessert</a></li>
 
                         </ul>
                     </li>
@@ -91,9 +92,9 @@
                         <a class="nav-link" href="#" data-bs-toggle="dropdown"> <span class="text">Cuisine</span> </a>
                         <ul class="dropdown-menu dropdown-menu-end fade-up dd-list2 ">
                             <li>
-                                <a class="dropdown-item dd-item" href="parks.html">American</a></li>
-                            <li><a class="dropdown-item dd-item" href="gardens.html">Chinese</a></li>
-                            <li><a class="dropdown-item dd-item" href="zoos.html">Indian</a></li>
+                                <a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'cuisine'} , val=${'american'})}">American</a></li>
+                            <li><a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'cuisine'} , val=${'chinese'})}">Chinese</a></li>
+                            <li><a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'cuisine'} , val=${'indian'})}">Indian</a></li>
 
                         </ul>
                     </li>
@@ -103,10 +104,10 @@
                                 class="text">Healthy lifestyle</span> </a>
                         <ul class="dropdown-menu dropdown-menu-end fade-up dd-list">
                             <li>
-                                <a class="dropdown-item dd-item" href="manhattan.html">Vegan</a></li>
-                            <li><a class="dropdown-item dd-item" href="brooklyn.html">Vegetarian</a></li>
-                            <li><a class="dropdown-item dd-item" href="bronx.html">Keto</a></li>
-                            <li><a class="dropdown-item dd-item" href="queens.html">Low-carb</a></li>
+                                <a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'consideration'} , val=${'vegan'})}">Vegan</a></li>
+                            <li><a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'consideration'} , val=${'vegetarian'})}">Vegetarian</a></li>
+                            <li><a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'consideration'} , val=${'keto'})}">Keto</a></li>
+                            <li><a class="dropdown-item dd-item" th:href="@{'/recipes/{cat}/{val}' (cat=${'consideration'} , val=${'low-carb'})}">Low-carb</a></li>
 
 
                         </ul>

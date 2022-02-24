@@ -74,7 +74,13 @@ public class RecipesController {
 
     }
 
+    @GetMapping("/search")
+    public String searchForResults(@RequestParam String searchInput){
 
+        List<Recipe> recipes=recipeService.findBySearch(searchInput);
+
+        return "redirect:/recipes";
+    }
 
     @GetMapping("/myRecipes/{id}")
     public String getUsersRecipes(@PathVariable String id,Model model, HttpServletRequest request){
@@ -125,7 +131,7 @@ public class RecipesController {
         return "redirect:/recipes/myRecipes/"+request.getRemoteUser();
     }
 
-    @GetMapping("/addToSaved/{id}") //avtentikacija so anotacija?
+    @GetMapping("/addToSaved/{id}")
     public String addToSaved(@PathVariable Long id, HttpServletRequest request){
         if(request.getRemoteUser()==null){
             return "redirect:/login";
@@ -140,6 +146,25 @@ public class RecipesController {
 
         recipeService.removeFromSaved(id,request.getRemoteUser());
         return "redirect:/recipes/myRecipes/"+request.getRemoteUser();
+
+    }
+
+    @GetMapping("/{cat}/{val}")
+    public String getByCategoryAndValue(@PathVariable String val, @PathVariable String cat, Model model){
+
+        List<Recipe> recipesList=recipeService.findAllRecipesByCategoryAndSubCategory(cat,val);
+        model.addAttribute("recipes",recipesList);
+        model.addAttribute("val",val);
+        return "recipes-category";
+
+    }
+    @GetMapping("/byAuthor/{author}")
+    public String getByAuthor(@PathVariable String author, Model model){
+        List<Recipe> recipesList=recipeService.findAllRecipesByUser(author);
+        model.addAttribute("recipes",recipesList);
+        model.addAttribute("val",author);
+        model.addAttribute("forAuthor",true);
+        return "recipes-category";
 
     }
 

@@ -8,6 +8,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -50,6 +51,5 @@ public class Recipe {
     private Double cookInMins;
 
     private LocalDateTime dateCreated;
-
 
 }

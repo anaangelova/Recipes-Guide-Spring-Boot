@@ -2,6 +2,8 @@ package com.example.recipeswebapp.repository;
 
 import com.example.recipeswebapp.model.Recipe;
 import com.example.recipeswebapp.model.RecipeStatus;
+import com.example.recipeswebapp.model.SpecialConsideration;
+import com.example.recipeswebapp.model.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -17,6 +19,13 @@ public interface RecipeRepository extends JpaRepository<Recipe,Long> {
     List<Recipe> findMostRecentRecipes();
     List<Recipe> findAllByAuthor_Username(String username);
     List<Recipe> findAllByStatus(RecipeStatus status);
+
+    List<Recipe> findAllByTitleContainingIgnoreCaseAndStatus(String title,RecipeStatus status);
+    List<Recipe> findAllByMeal_NameContainingIgnoreCaseAndStatus(String name, RecipeStatus status);
+    List<Recipe> findAllByCuisine_NameContainingIgnoreCaseAndStatus(String name,RecipeStatus status);
+
+    List<Recipe> findAllByTagListContains(Tag tag);
+    List<Recipe> findAllByConsiderationsContainsAndStatus(SpecialConsideration consideration, RecipeStatus status);
 
 
 

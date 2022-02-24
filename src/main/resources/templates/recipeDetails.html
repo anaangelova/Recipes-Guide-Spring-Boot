@@ -95,7 +95,7 @@
                             class="fa-solid fa-arrow-down"></i></a>
                 </div>
                 <div class="col-4">
-                    <a href="#" class="btn formBtnSave mt-2 d-block" type="submit">Save <i
+                    <a th:href="@{'/recipes/addToSaved/{id}' (id=${detailsDTO.getRecipe().getId()})}" class="btn formBtnSave mt-2 d-block" type="submit">Save <i
                             class="fa-solid fa-bookmark"></i></a>
                 </div>
 

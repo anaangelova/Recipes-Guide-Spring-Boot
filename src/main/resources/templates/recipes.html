@@ -11,8 +11,26 @@
 <div th:replace="fragments/parts.html :: headerEx"></div>
 
 
-
 <div class="containerRecipes  px-5 pb-5 pt-3 mt-3 ">
+
+    <form action="/recipes/search" method="GET">
+        <div class="container d-flex justify-content-center">
+
+            <div class="input-group mb-3 w-50 mt-3"><input type="text" class="searchControl form-control input-text"
+                                                 name="searchInput" autocomplete="off" placeholder="Search recipes...."
+                                                 aria-label="searchI" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-warning btn-lg py-0" type="submit"><i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </form>
+
     <h3 class="newestTitle pl-3 pt-3">Our newest recipes</h3>
     <div class="d-flex justify-content-center">
         <div class="w-100 mr-3 trans" th:each="rec : ${recents}">
@@ -27,8 +45,12 @@
                     <h5 class="card-title recipeTitle" th:text="${rec.getTitle()}"></h5>
                 </div>
                 <div class="card-footer">
-                    <p class="card-text authorInf pl-1" th:text="${'By: '+ rec.getAuthor().getUsername()}"></p>
-                    <a th:href="@{'/recipes/addToSaved/{id}' (id=${rec.getId()})}" class="btn btnSave rounded-pill px-3">Save <i
+                    <p class="card-text authorInf pl-1" >
+                        By: <a th:href="@{'/recipes/byAuthor/{author}' (author=${rec.getAuthor().getUsername()})}" class="card-text authorInf pl-1 d-inline authorA" th:text="${rec.getAuthor().getUsername()}"></a>
+
+                    </p>
+                    <a th:href="@{'/recipes/addToSaved/{id}' (id=${rec.getId()})}"
+                       class="btn btnSave rounded-pill px-3">Save <i
                             class="fa-solid fa-bookmark"></i></a>
                 </div>
             </div>
@@ -42,8 +64,8 @@
 
             <div class="card h-100 w-100 ">
                 <a th:href="@{'/recipes/details/{id}' (id=${rec.getId()})}">
-                <img th:src="@{${'/images/' + rec.getImages().get(0).getTitle()}}" class="card-img-top rounded-0"
-                     alt="...">
+                    <img th:src="@{${'/images/' + rec.getImages().get(0).getTitle()}}" class="card-img-top rounded-0"
+                         alt="...">
                 </a>
                 <div class="card-body rounded-0 p-3">
                     <p class="card-text meal m-0 p-0" th:text="${rec.getMeal().name}"></p>
@@ -51,7 +73,8 @@
                 </div>
                 <div class="card-footer">
                     <p class="card-text authorInf pl-1" th:text="${'By: '+ rec.getAuthor().getUsername()}"></p>
-                    <a th:href="@{'/recipes/addToSaved/{id}' (id=${rec.getId()})}" class="btn btnSave rounded-pill px-3">Save <i
+                    <a th:href="@{'/recipes/addToSaved/{id}' (id=${rec.getId()})}"
+                       class="btn btnSave rounded-pill px-3">Save <i
                             class="fa-solid fa-bookmark"></i></a>
                 </div>
             </div>

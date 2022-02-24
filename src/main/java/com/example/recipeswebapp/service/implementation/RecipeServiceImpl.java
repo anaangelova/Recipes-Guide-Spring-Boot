@@ -14,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -109,13 +106,13 @@ public class RecipeServiceImpl implements RecipeService {
 
 
         //M:N
-        List<Ingredient> ingredients= createMNrelations(recipeDTO,recipeToAdd);
+        List<Ingredient> ingredients = createMNrelations(recipeDTO, recipeToAdd);
         ingredientRepository.saveAll(ingredients);
         recipeToAdd.setIngredients(ingredients);
         Recipe addedRecipe = recipeRepository.save(recipeToAdd);
 
         //One to many
-        List<Instruction> instructionsToAdd = getInstructions(recipeDTO,addedRecipe);
+        List<Instruction> instructionsToAdd = getInstructions(recipeDTO, addedRecipe);
         instructionRepository.saveAll(instructionsToAdd);
 
         addedRecipe.setInstructions(instructionsToAdd);
@@ -154,7 +151,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 
         //M:N
-        List<Ingredient> ingredients=createMNrelations(recipeDTO,recipeToAdd);
+        List<Ingredient> ingredients = createMNrelations(recipeDTO, recipeToAdd);
         List<Ingredient> tmp = recipeToAdd.getIngredients();
         ingredientRepository.deleteAll(tmp);
 
@@ -164,7 +161,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe addedRecipe = recipeRepository.save(recipeToAdd);
 
         //One to many
-        List<Instruction> instructionsToAdd =getInstructions(recipeDTO,addedRecipe);
+        List<Instruction> instructionsToAdd = getInstructions(recipeDTO, addedRecipe);
         List<Instruction> tmp2 = recipeToAdd.getInstructions();
         instructionRepository.deleteAll(tmp2);
         instructionRepository.saveAll(instructionsToAdd);
@@ -203,7 +200,60 @@ public class RecipeServiceImpl implements RecipeService {
         return true;
     }
 
-    private List<Ingredient> createMNrelations(RecipeDTO recipeDTO, Recipe recipeToAdd){
+    @Override
+    public List<Recipe> findBySearch(String search) {
+        List<String> keywords = Arrays.stream(search.split("\\s+")).collect(Collectors.toList());
+
+        List<Tag> tags = new ArrayList<>();
+        keywords.stream().forEach(t ->
+                {
+                    if (tagRepository.findByNameIgnoreCase(t).isPresent()) {
+                        tags.add(tagRepository.findByNameIgnoreCase(t).get());
+                    }
+                }
+        );
+
+        List<SpecialConsideration> considerations = new ArrayList<>();
+        keywords.stream().forEach(t ->
+                {
+                    if (specialConsiderationRepository.findByNameIgnoreCase(t).isPresent()) {
+                        considerations.add(specialConsiderationRepository.findByNameIgnoreCase(t).get());
+                    }
+                }
+        );
+
+        Set<Recipe> all = new TreeSet<>(Comparator.comparing(Recipe::getId));
+        keywords.stream().forEach(k -> {
+            all.addAll(recipeRepository.findAllByTitleContainingIgnoreCaseAndStatus(k,RecipeStatus.APPROVED));
+            all.addAll(recipeRepository.findAllByMeal_NameContainingIgnoreCaseAndStatus(k,RecipeStatus.APPROVED));
+            all.addAll(recipeRepository.findAllByCuisine_NameContainingIgnoreCaseAndStatus(k,RecipeStatus.APPROVED));
+
+            tags.stream().forEach(t -> all.addAll(recipeRepository.findAllByTagListContains(t)));
+            considerations.stream().forEach(t -> all.addAll(recipeRepository.findAllByConsiderationsContainsAndStatus(t, RecipeStatus.APPROVED)));
+        });
+
+        return new ArrayList<>(all);
+    }
+
+    @Override
+    public List<Recipe> findAllRecipesByCategoryAndSubCategory(String cat,String val) {
+       return switch (cat){
+            case "meal" -> recipeRepository.findAllByMeal_NameContainingIgnoreCaseAndStatus(val,RecipeStatus.APPROVED);
+            case "cuisine" -> recipeRepository.findAllByCuisine_NameContainingIgnoreCaseAndStatus(val,RecipeStatus.APPROVED);
+            case "consideration" -> {
+                if(specialConsiderationRepository.findByNameIgnoreCase(val).isPresent()){
+                    SpecialConsideration sc=specialConsiderationRepository.findByNameIgnoreCase(val).get();
+                     yield  recipeRepository.findAllByConsiderationsContainsAndStatus(sc, RecipeStatus.APPROVED);
+                }
+                yield new ArrayList<>();
+
+            }
+           default ->  new ArrayList<>();
+        };
+
+    }
+
+    private List<Ingredient> createMNrelations(RecipeDTO recipeDTO, Recipe recipeToAdd) {
         List<Tag> tags = new ArrayList<>();
         List<String> tagsList = List.of(recipeDTO.getTagList().trim().split("\\s+"));
         tagsList.stream().forEach(t -> {
@@ -214,9 +264,12 @@ public class RecipeServiceImpl implements RecipeService {
         recipeToAdd.setTagList(tags);
 
         //M:N
-        List<SpecialConsideration> consTmp = specialConsiderationRepository
-                .findAllById(recipeDTO.getConsiderations());
-        recipeToAdd.setConsiderations(consTmp);
+        if (recipeDTO.getConsiderations().size() > 0) {
+            List<SpecialConsideration> consTmp = specialConsiderationRepository
+                    .findAllById(recipeDTO.getConsiderations());
+            recipeToAdd.setConsiderations(consTmp);
+        }
+
 
         //M:N
         List<Ingredient> ingredients = new ArrayList<>();
@@ -229,8 +282,8 @@ public class RecipeServiceImpl implements RecipeService {
         return ingredients;
     }
 
-    private List<Instruction> getInstructions(RecipeDTO recipeDTO, Recipe addedRecipe){
+    private List<Instruction> getInstructions(RecipeDTO recipeDTO, Recipe addedRecipe) {
 
-       return recipeDTO.getInstructions().stream().map(i ->new Instruction(i,addedRecipe)).collect(Collectors.toList());
+        return recipeDTO.getInstructions().stream().map(i -> new Instruction(i, addedRecipe)).collect(Collectors.toList());
     }
 }

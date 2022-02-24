@@ -38,7 +38,7 @@ public class RegisterController {
     public String register(@RequestParam String username,
                            @RequestParam String email,
                            @RequestParam String password,
-                           @RequestParam String repeatPassword,
+                           @RequestParam  String repeatPassword,
                            @RequestParam String name,
                            @RequestParam String surname) {
 

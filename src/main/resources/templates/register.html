@@ -6,7 +6,7 @@
 <body>
 <th:block th:replace="fragments/parts.html :: headerEx"></th:block>
 <div class="container">
-    <h1 th:if="${hasError}" th:text="${error}"></h1>
+
 </div>
 <div class="container formContainer mt-5 pb-4 px-0">
     <div class="row justify-content-center mx-0 ">
@@ -80,7 +80,11 @@
                 </div>
             </div>
 
-
+            <div class="form-row" th:if="${hasError}">
+                <div class="col-12">
+                    <p th:text="${error}" class="text-danger"></p>
+                </div>
+            </div>
 
             <div class="text-center row justify-content-center mt-2 mx-0">
                 <button class="btn col-6 rounded formBtn" type="submit">Sign up</button>

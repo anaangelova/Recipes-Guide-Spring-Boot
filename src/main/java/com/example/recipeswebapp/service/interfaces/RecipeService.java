@@ -33,4 +33,8 @@ public interface RecipeService {
     boolean addRecipeToSaved(Long recipeId, String username);
 
     boolean removeFromSaved(Long recipeId, String username);
+
+    List<Recipe> findBySearch(String search);
+    List<Recipe> findAllRecipesByCategoryAndSubCategory(String cat, String val);
+
 }

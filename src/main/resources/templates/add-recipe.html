@@ -29,13 +29,14 @@
                            class="form-control"
                            id="desc"
                            name="description"
+                           required
                            placeholder="Description">
                 </div>
 
                 <div class="form-row">
                     <div class="col-6">
                         <label>Meal</label>
-                        <select name="meal" class="form-control">
+                        <select name="meal" class="form-control" required>
 
                             <option
                                     th:each="meal : ${dto.getAllMeals()}"
@@ -47,7 +48,7 @@
 
                     <div class="col-6">
                         <label>Cuisine</label>
-                        <select name="cuisine" class="form-control">
+                        <select name="cuisine" class="form-control" required>
 
                             <option
                                     th:each="cuisine : ${dto.getAllCuisines()}"
@@ -56,8 +57,8 @@
                             </option>
                         </select>
                     </div>
-                </div >
-                <div class="mt-4 mb-2">Special Considerations</div>
+                </div>
+                <div class="mt-4 mb-2">Special &nbsp; Considerations</div>
                 <div class="form-group form-check-inline " th:each="sc : ${dto.getAllCons()}">
 
                     <label>
@@ -71,17 +72,21 @@
                     <div>Ingredients
                         <button id="addRowIngr" type="button" class="modifiedB">+</button>
                     </div>
-                    <input type="number" name="ingredientQuantities" class="form-control m-input mr-2" min="0">
-                    <select name="ingredientMeasurements" class="form-control mr-2">
+                    <div class="d-flex mb-3">
+                        <input type="number" name="ingredientQuantities" class="form-control m-input mr-2" min="0"
+                               required>
+                        <select name="ingredientMeasurements" class="form-control mr-2" required>
 
-                        <option
-                                th:each="measurement : ${dto.getAllMeasurements()}"
-                                th:value="${measurement.toString()}"
-                                th:text="${measurement.toString()}">
-                        </option>
-                    </select>
-                    <input type="text" name="ingredientNames" class="form-control m-input" placeholder="Enter ingredient"
-                           autocomplete="off">
+                            <option
+                                    th:each="measurement : ${dto.getAllMeasurements()}"
+                                    th:value="${measurement.toString()}"
+                                    th:text="${measurement.toString()}">
+                            </option>
+                        </select>
+                        <input type="text" name="ingredientNames" class="form-control m-input"
+                               placeholder="Enter ingredient" required
+                               autocomplete="off">
+                    </div>
                     <div id="newRowIngr"></div>
 
 
@@ -93,10 +98,10 @@
 
                     <div class="row">
                         <input type="number" class="form-control col-4 ml-4 mr-2" id="prep" min="0"
-                               name="prepH" placeholder="hours">
+                               name="prepH" placeholder="hours" required>
 
                         <input type="number" class="form-control col-4" id="prepMin" name="prepM" min="0" max="59"
-                               placeholder="mins">
+                               placeholder="mins" required>
                     </div>
                 </div>
 
@@ -106,10 +111,10 @@
 
                     <div class="row">
                         <input type="number" class="form-control col-4 ml-4 mr-2" id="cook" min="0"
-                               name="cookH" placeholder="hours">
+                               name="cookH" placeholder="hours" required>
 
                         <input type="number" class="form-control col-4" id="cookMin" name="cookM" min="0" max="59"
-                               placeholder="mins">
+                               placeholder="mins" required>
                     </div>
                 </div>
 
@@ -120,7 +125,7 @@
                            class="form-control"
                            id="keywords"
                            name="tagList"
-                           placeholder="Keywords">
+                           placeholder="Keywords" required>
                 </div>
 
                 <div class="form-group">
@@ -129,15 +134,15 @@
                            class="form-control"
                            id="images"
                            name="images"
-                           placeholder="Upload images">
+                           placeholder="Upload images" required>
                 </div>
                 <div class="form-group">
                     <div>Instructions
                         <button id="addRow" type="button" class="modifiedB">+</button>
                     </div>
 
-                    <input type="text" name="instructions" class="form-control m-input" placeholder="Enter title"
-                           autocomplete="off">
+                    <input type="text" name="instructions" class="form-control m-input mb-2" placeholder="Enter instruction"
+                           autocomplete="off" required>
                     <div id="newRow"></div>
 
 
@@ -159,9 +164,9 @@
         var html = '';
         html += '<div id="inputFormRow">';
         html += '<div class="input-group mb-3">';
-        html += '<input type="text" name="instructions" class="form-control m-input" placeholder="Enter title" autocomplete="off">';
+        html += '<input type="text" name="instructions" class="form-control m-input mr-2" placeholder="Enter instruction" autocomplete="off">';
         html += '<div class="input-group-append">';
-        html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>';
+        html += '<button id="removeRow" type="button" class="btn removeModified p-0">&mdash;</button>';
         html += '</div>';
         html += '</div>';
 
@@ -181,8 +186,8 @@
         var html = '';
         html += '<div id="inputFormRow">';
         html += '<div class="input-group mb-3">';
-        html += '<input type="number" name="ingredientQuantities" class="form-control m-input" min="0">';
-        html += '<select name="ingredientMeasurements" class="form-control">';
+        html += '<input type="number" name="ingredientQuantities" class="form-control m-input mr-2" min="0" placeholder="Quantity">';
+        html += '<select name="ingredientMeasurements" class="form-control mr-2">';
 
         var i;
         for (i = 0; i < modelAttributeValue.length; i++) {
@@ -195,9 +200,9 @@
             html += opt.outerHTML;
         }
         html += '</select>';
-        html += '<input type="text" name="ingredientNames" class="form-control m-input" placeholder="Ingredient name" autocomplete="off">';
+        html += '<input type="text" name="ingredientNames" class="form-control m-input mr-2" placeholder="Ingredient name" autocomplete="off">';
         html += '<div class="input-group-append">';
-        html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>';
+        html += '<button id="removeRow" type="button" class="btn removeModified p-0">&mdash;</button>';
         html += '</div>';
         html += '</div>';
 

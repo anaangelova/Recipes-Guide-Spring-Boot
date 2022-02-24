@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="fragments/parts.html :: headerfiles">
+
+</head>
+<body>
+<th:block th:replace="fragments/parts.html :: headerEx"></th:block>
+
+<div class="containerRecipes  px-5 pb-5 pt-3 mt-3 ">
+<h3 class="newestTitle pl-3 pt-3" th:if="${forAuthor==null}" th:text="${val.toUpperCase() + ' RECIPES'}"></h3>
+<h3 class="newestTitle pl-3 pt-3" th:if="${forAuthor!=null}" th:text="${'RECIPES FROM USER '+val.toUpperCase()}"></h3>
+
+    <div class="d-flex justify-content-start flex-wrap">
+        <div class="w-25 pr-3 mb-3 trans" th:each="rec : ${recipes}">
+
+            <div class="card h-100 w-100 ">
+                <a th:href="@{'/recipes/details/{id}' (id=${rec.getId()})}">
+                    <img th:src="@{${'/images/' + rec.getImages().get(0).getTitle()}}" class="card-img-top rounded-0"
+                         alt="...">
+                </a>
+                <div class="card-body rounded-0 p-3">
+                    <p class="card-text meal m-0 p-0" th:text="${rec.getMeal().name}"></p>
+                    <h5 class="card-title recipeTitle" th:text="${rec.getTitle()}"></h5>
+                </div>
+                <div class="card-footer">
+                    <p class="card-text authorInf pl-1" >
+                        By: <a th:href="@{'/recipes/byAuthor/{author}' (author=${rec.getAuthor().getUsername()})}" class="card-text authorInf pl-1 d-inline authorA" th:text="${rec.getAuthor().getUsername()}"></a>
+
+                    </p>
+                    <a th:href="@{'/recipes/addToSaved/{id}' (id=${rec.getId()})}"
+                       class="btn btnSave rounded-pill px-3">Save <i
+                            class="fa-solid fa-bookmark"></i></a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+<th:block th:replace="fragments/parts.html :: footer"></th:block>
+</body>
+</html>

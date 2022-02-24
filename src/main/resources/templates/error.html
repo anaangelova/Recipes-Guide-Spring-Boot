@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/parts.html :: headerfiles">
+
+</head>
+<body>
+<th:block th:replace="fragments/parts.html :: headerEx"></th:block>
+
+<div class="h2 text-danger mt-3 container">Error page</div>
+<div class="container">
+
+    <p th:if="${exception}" id='message' th:text="${exception.message}" class="h3 font-weight-bold ">
+    </p>
+    <p th:if="${status}">
+        <b>Response Status:</b> <span th:text="${status}">status-code</span> <span
+            th:if="${error}" th:text="'('+${error}+')'">error ...</span>
+    </p>
+
+    <a href="/recipes" class="btn btn-outline-dark mt-3">Go back</a>
+</div>
+<th:block th:replace="fragments/parts.html :: footer"></th:block>
+
+
+</body>
+</html>
