@@ -4,6 +4,8 @@ import com.example.recipeswebapp.config.CustomOAuth2User;
 import com.example.recipeswebapp.model.Identity.Provider;
 import com.example.recipeswebapp.model.Identity.RecipeAuthor;
 import com.example.recipeswebapp.model.Identity.Role;
+import com.example.recipeswebapp.model.exceptions.PasswordsDoNotMatchException;
+import com.example.recipeswebapp.model.exceptions.UserExistsException;
 import com.example.recipeswebapp.repository.UserRepository;
 import com.example.recipeswebapp.service.interfaces.UserService;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,14 +34,12 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException();
         if (password.equals(repeatPassword)) {
             RecipeAuthor user = new RecipeAuthor(username,email, passwordEncoder.encode(password), firstName, lastName,role,Provider.LOCAL);
-            //ako vekje ima takov user??? spored biznis logikata ne treba da go izbrisheme prethodniot korisnik! tuku ednostavno
-            //ne treba da dozvolime da se vnese nov korisnik voopshto!
             if (userRepository.findByUsername(username).isPresent()) {
-                throw new BadCredentialsException("Username already exists!"); //mozhe so custom exception!!
+                throw new UserExistsException(username);
             }
 
             return userRepository.save(user);
-        } else throw new BadCredentialsException("Passwords do not match!"); //mozhe so custom exception!!
+        } else throw new PasswordsDoNotMatchException();
     }
 
     @Override
@@ -50,13 +50,15 @@ public class UserServiceImpl implements UserService {
     public void processOAuthPostLogin(CustomOAuth2User oauthUser) {
 
         Optional<RecipeAuthor> existUser = userRepository.findByEmail(oauthUser.getEmail());
-
+        String clientName=oauthUser.getOauth2ClientName().toLowerCase();
         if (existUser.isEmpty()) {
             RecipeAuthor newUser = new RecipeAuthor();
             newUser.setRole(Role.ROLE_USER);
             newUser.setUsername(oauthUser.getName());
             newUser.setEmail(oauthUser.getEmail());
-            newUser.setProvider(Provider.GOOGLE);
+            if(clientName.equals("google"))
+                newUser.setProvider(Provider.GOOGLE);
+            else newUser.setProvider(Provider.FACEBOOK);
             newUser.setEnabled(true);
 
             userRepository.save(newUser);

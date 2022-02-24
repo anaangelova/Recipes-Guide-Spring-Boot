@@ -2,6 +2,7 @@ package com.example.recipeswebapp.web;
 
 
 import com.example.recipeswebapp.model.Identity.RecipeAuthor;
+import com.example.recipeswebapp.model.exceptions.InvalidUserCredentialsException;
 import com.example.recipeswebapp.service.interfaces.AuthService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,7 +34,7 @@ public class LoginController {
             user = authService.login(request.getParameter("username"),request.getParameter("password"));
             request.getSession().setAttribute("user",user);
             return "redirect:/home";
-        }catch (RuntimeException exception){
+        }catch (InvalidUserCredentialsException exception){
             model.addAttribute("hasError",true);
             model.addAttribute("error",exception.getMessage());
             return "login";

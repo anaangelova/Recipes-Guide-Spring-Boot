@@ -1,7 +1,10 @@
 package com.example.recipeswebapp.web;
 
 import com.example.recipeswebapp.model.*;
+import com.example.recipeswebapp.model.DTO.EditDTO;
 import com.example.recipeswebapp.model.DTO.RecipeDTO;
+import com.example.recipeswebapp.model.DTO.ContentDTO;
+import com.example.recipeswebapp.model.DTO.RecipeDetailsDTO;
 import com.example.recipeswebapp.model.Identity.RecipeAuthor;
 import com.example.recipeswebapp.model.Identity.Role;
 import com.example.recipeswebapp.service.interfaces.*;
@@ -37,7 +40,6 @@ public class RecipesController {
 
     @GetMapping()
     public String getAllRecipes(Model model){
-
         List<Recipe> mostRecent=recipeService.findAllRecipesApprovedAndMostRecent();
         List<Recipe> trending=recipeService.findAllRecipesApprovedAndTrending();
         model.addAttribute("recents",mostRecent);
@@ -46,63 +48,38 @@ public class RecipesController {
         return "recipes";
     }
 
+
     @GetMapping( "/addRecipe")
     public String addRecipe(Model model){
-        List<Meal> allMeals=mealService.getAllMeals();
-        List<Cuisine> allCuisines=cuisineService.getAllCuisines();
-        List<SpecialConsideration> allCons=specialConsService.getAllSpecConsiderations();
+        ContentDTO toShow=this.getContent();
+        model.addAttribute("dto",toShow);
         List<String> allMeasurements= Arrays.stream(Measurement.values()).map(m -> m.name()).collect(Collectors.toList());
-        model.addAttribute("meals",allMeals);
-        model.addAttribute("cuisines",allCuisines);
-        model.addAttribute("specs",allCons);
         model.addAttribute("measurements",allMeasurements);
         return "add-recipe";
     }
 
-    @PostMapping("/addRecipe")
+    @PostMapping("/addRecipe") //dali rabote validacijata???
     public String addRecipePost(@Valid RecipeDTO recipeAdded, @RequestPart List<MultipartFile> images) throws IOException {
-
-        String path="";
-        List<String> imagesNames=new ArrayList<>();
-        for(MultipartFile m: images){
-            path = "C:\\Users\\Latinka\\IdeaProjects\\RecipesWebApp\\src\\main\\resources\\static\\images\\"+m.getOriginalFilename();
-            File newFile = new File(path);
-            newFile.createNewFile();
-            FileOutputStream myfile = new FileOutputStream(newFile);
-            myfile.write(m.getBytes());
-            myfile.close();
-            imagesNames.add(m.getOriginalFilename());
-        }
-        recipeService.save(recipeAdded,images,imagesNames);
+        List<String> imagesNames=this.saveImages(images);
+        recipeService.save(recipeAdded,imagesNames);
         return "redirect:/recipes";
     }
 
     @GetMapping("/details/{id}")
     public String getDetailsForRecipe(@PathVariable Long id,Model model){
-        Recipe toShow=recipeService.findById(id).orElseThrow();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formatDateTime = toShow.getDateCreated().format(formatter);
-        model.addAttribute("recipe",toShow);
-        model.addAttribute("formatted",formatDateTime);
-        List<String> tmp=toShow.getIngredients().stream().map(i -> i.getFormatted()).collect(Collectors.toList());
-        List<String> instructions=toShow.getInstructions().stream().map(instr -> instr.getDescription()).collect(Collectors.toList());
-        model.addAttribute("allIngr",tmp);
-        model.addAttribute("allInstr",instructions);
 
-        Set<String> allTags=new TreeSet<>();
-        allTags.addAll(toShow.getTagList().stream().map(t -> t.getName()).collect(Collectors.toList()));
-        allTags.add(toShow.getMeal().getName());
-        allTags.add(toShow.getCuisine().getName());
-        allTags=allTags.stream().map(t -> t.toUpperCase()).collect(Collectors.toSet());
-        model.addAttribute("allTags",allTags);
-
+        RecipeDetailsDTO detailsDTO=this.getDetailsDTO(id);
+        model.addAttribute("detailsDTO",detailsDTO);
         return "recipeDetails";
 
     }
+
+
+
     @GetMapping("/myRecipes/{id}")
     public String getUsersRecipes(@PathVariable String id,Model model, HttpServletRequest request){
-        List<Recipe> selectedRecipes=recipeService.findAllRecipesByUser(id);
-        model.addAttribute("recipes",selectedRecipes);
+        List<Recipe> recipesByUser=recipeService.findAllRecipesByUser(id);
+        model.addAttribute("recipes",recipesByUser);
         RecipeAuthor author=(RecipeAuthor) userService.loadUserByUsername(request.getRemoteUser());
         model.addAttribute("author",author);
         if(author.getRole().equals(Role.ROLE_ADMIN)){
@@ -118,28 +95,22 @@ public class RecipesController {
     @GetMapping("/edit/{id}")
     public String editRecipe(@PathVariable Long id, Model model, HttpServletRequest request){
 
-        Recipe toShow=recipeService.findById(id).orElseThrow();
-        if(request.getRemoteUser().equals(toShow.getAuthor().getUsername())){
-            model.addAttribute("recipe",toShow);
-            List<Meal> allMeals=mealService.getAllMeals();
-            List<Cuisine> allCuisines=cuisineService.getAllCuisines();
-            List<SpecialConsideration> allCons=specialConsService.getAllSpecConsiderations();
+        Recipe toEdit=recipeService.findById(id);
+        if(isAuthor(toEdit,request.getRemoteUser())){
+            ContentDTO contentDTO=this.getContent();
+            EditDTO editDTO=this.getEditDTO(toEdit);
+            model.addAttribute("contentDTO",contentDTO);
+            model.addAttribute("editDTO",editDTO);
             List<String> allMeasurements= Arrays.stream(Measurement.values()).map(m -> m.name()).collect(Collectors.toList());
-            model.addAttribute("meals",allMeals);
-            model.addAttribute("cuisines",allCuisines);
-            model.addAttribute("specs",allCons);
             model.addAttribute("measurements",allMeasurements);
-            String keywordsS=toShow.getTagList().stream().map(t -> t.getName()).collect(Collectors.joining(" "));
-            model.addAttribute("keywords",keywordsS);
-            int prepH= (int) (toShow.getPrepInMins()/60);
-            int cookH= (int) (toShow.getCookInMins()/60);
-            model.addAttribute("prepH",prepH);
-            model.addAttribute("cookH",cookH);
             return "edit";
         }else return "redirect:/recipes";
 
 
     }
+
+
+
     @PostMapping("/editRecipe")
     public String editRecipePost(@Valid RecipeDTO recipeEdited, Long recipeId, String author){
 
@@ -154,7 +125,7 @@ public class RecipesController {
         return "redirect:/recipes/myRecipes/"+request.getRemoteUser();
     }
 
-    @GetMapping("/addToSaved/{id}")
+    @GetMapping("/addToSaved/{id}") //avtentikacija so anotacija?
     public String addToSaved(@PathVariable Long id, HttpServletRequest request){
         if(request.getRemoteUser()==null){
             return "redirect:/login";
@@ -163,7 +134,7 @@ public class RecipesController {
         return "redirect:/recipes";
 
     }
-    //removeFromSaved
+
     @GetMapping("/removeFromSaved/{id}")
     public String removeFromSaved(@PathVariable Long id, HttpServletRequest request){
 
@@ -172,4 +143,52 @@ public class RecipesController {
 
     }
 
+    private ContentDTO getContent(){
+        List<Meal> allMeals=mealService.getAllMeals();
+        List<Cuisine> allCuisines=cuisineService.getAllCuisines();
+        List<SpecialConsideration> allCons=specialConsService.getAllSpecConsiderations();
+        List<String> allMeasurements= Arrays.stream(Measurement.values()).map(m -> m.name()).collect(Collectors.toList());
+        return new ContentDTO(allMeals,allCuisines,allCons,allMeasurements);
+    }
+
+    private List<String> saveImages(List<MultipartFile> images) throws IOException {
+        String path="";
+        List<String> imagesNames=new ArrayList<>();
+        for(MultipartFile m: images){
+            path = "C:\\Users\\Latinka\\IdeaProjects\\RecipesWebApp\\src\\main\\resources\\static\\images\\"+m.getOriginalFilename();
+            File newFile = new File(path);
+            newFile.createNewFile();
+            FileOutputStream myfile = new FileOutputStream(newFile);
+            myfile.write(m.getBytes());
+            myfile.close();
+            imagesNames.add(m.getOriginalFilename());
+        }
+        return imagesNames;
+    }
+
+    private RecipeDetailsDTO getDetailsDTO(Long id){
+        Recipe toShow=recipeService.findById(id);
+        List<String> ingredients=toShow.getIngredients().stream().map(i -> i.getFormatted()).collect(Collectors.toList());
+        List<String> instructions=toShow.getInstructions().stream().map(instr -> instr.getDescription()).collect(Collectors.toList());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formatDateTime = toShow.getDateCreated().format(formatter);
+
+        Set<String> allTags = new TreeSet<>(toShow.getTagList().stream().map(t -> t.getName().toUpperCase()).collect(Collectors.toList()));
+        allTags.add(toShow.getMeal().getName().toUpperCase());
+        allTags.add(toShow.getCuisine().getName().toUpperCase());
+
+        return new RecipeDetailsDTO(allTags,instructions,ingredients,formatDateTime,toShow);
+
+    }
+    private boolean isAuthor(Recipe toEdit, String author){
+        return author.equals(toEdit.getAuthor().getUsername());
+    }
+
+    private EditDTO getEditDTO(Recipe toEdit){
+        String keywordsS=toEdit.getTagList().stream().map(t -> t.getName()).collect(Collectors.joining(" "));
+        int prepH= (int) (toEdit.getPrepInMins()/60);
+        int cookH= (int) (toEdit.getCookInMins()/60);
+        return new EditDTO(toEdit,keywordsS,prepH,cookH);
+    }
 }

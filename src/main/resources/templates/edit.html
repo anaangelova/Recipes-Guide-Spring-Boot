@@ -10,7 +10,7 @@
 
 
 <div class="container editContainer mt-0 pb-5">
-    <h1 class="h1 text-center editT pt-5 py-3" th:text="${'Edit recipe ' + recipe.getTitle()}"></h1>
+    <h1 class="h1 text-center editT pt-5 py-3" th:text="${'Edit recipe ' + editDTO.getRecipe().getTitle()}"></h1>
     <div class="row">
         <div class="col-2"></div>
         <div class="col-8">
@@ -21,7 +21,7 @@
                            class="form-control"
                            id="title"
                            name="title"
-                           th:value="(${recipe} != null ? ${recipe.getTitle()} : '')"
+                           th:value="(${editDTO.getRecipe()} != null ? ${editDTO.getRecipe().getTitle()} : '')"
                            required
                            placeholder="Enter product name">
                 </div>
@@ -32,7 +32,7 @@
                            id="desc"
                            name="description"
                            required
-                           th:value="(${recipe} != null ? ${recipe.getDescription()} : '')"
+                           th:value="(${editDTO.getRecipe()} != null ? ${editDTO.getRecipe().getDescription()} : '')"
                            placeholder="Description" style="height: 4vw;">
                 </div>
 
@@ -42,8 +42,8 @@
                         <select name="meal" class="form-control" required>
 
                             <option
-                                    th:selected="${recipe.getMeal() != null && recipe.getMeal().getId() == meal.getId()}"
-                                    th:each="meal : ${meals}"
+                                    th:selected="${editDTO.getRecipe().getMeal() != null && editDTO.getRecipe().getMeal().getId() == meal.getId()}"
+                                    th:each="meal : ${contentDTO.getAllMeals()}"
                                     th:value="${meal.getId()}"
                                     th:text="${meal.getName()}">
                             </option>
@@ -54,8 +54,8 @@
                         <select name="cuisine" class="form-control" required>
 
                             <option
-                                    th:selected="${recipe.getCuisine() != null && recipe.getCuisine().getId() == cuisine.getId()}"
-                                    th:each="cuisine : ${cuisines}"
+                                    th:selected="${editDTO.getRecipe().getCuisine() != null && editDTO.getRecipe().getCuisine().getId() == cuisine.getId()}"
+                                    th:each="cuisine : ${contentDTO.getAllCuisines()}"
                                     th:value="${cuisine.getId()}"
                                     th:text="${cuisine.getName()}">
                             </option>
@@ -63,12 +63,12 @@
                     </div>
                 </div>
                 <div class="mt-4 mb-2">Special Considerations</div>
-                <div class="form-group form-check-inline " th:each="sc : ${specs}">
+                <div class="form-group form-check-inline " th:each="sc : ${contentDTO.getAllCons()}">
 
                     <label>
                         <input type="checkbox" name="considerations" class="form-control form-check-input" style="height: 1vw;"
                                th:text="${sc.getName()}" th:value="${sc.getId()}"
-                                th:checked="${recipe.getConsiderations().contains(sc)}"
+                                th:checked="${editDTO.getRecipe().getConsiderations().contains(sc)}"
                         >
                     </label>
 
@@ -77,16 +77,16 @@
                 <div class="form-group">
                     <div>Ingredients
                         <button id="addRowIngr" type="button" class="modifiedB">+</button></div>
-                    <div th:each="ingr : ${recipe.getIngredients()}" class="d-flex mb-3">
+                    <div th:each="ingr : ${editDTO.getRecipe().getIngredients()}" class="d-flex mb-3">
 
                         <input type="number" name="ingredientQuantities" class="form-control m-input mr-2" min="0" th:value="${ingr.getQuantity()}">
                         <select name="ingredientMeasurements" class="form-control mr-2">
 
                             <option
-                                    th:each="measurement : ${measurements}"
-                                    th:selected="${ingr.getMeasurement() != null && ingr.getMeasurement().toString()== measurement.toString()}"
-                                    th:value="${measurement.toString()}"
-                                    th:text="${measurement.toString()}">
+                                    th:each="measurement : ${contentDTO.getAllMeasurements()}"
+                                    th:selected="${ingr.getMeasurement() != null && ingr.getMeasurement().toString()== measurement}"
+                                    th:value="${measurement}"
+                                    th:text="${measurement}">
                             </option>
                         </select>
                         <input type="text" name="ingredientNames" class="form-control m-input" placeholder="Enter title" th:value="${ingr.getName()}" autocomplete="off">
@@ -104,10 +104,10 @@
 
                     <div class="row">
                         <input type="number" class="form-control col-4 ml-4 mr-2" id="prep" min="0"
-                               name="prepH" placeholder="hours" th:value="${prepH}">
+                               name="prepH" placeholder="hours" th:value="${editDTO.getPrepH()}">
 
                         <input type="number" class="form-control col-4" id="prepMin" name="prepM" min="0" max="59"
-                               th:value="${recipe.getPrepInMins()%60}" placeholder="mins">
+                               th:value="${editDTO.getRecipe().getPrepInMins()%60}" placeholder="mins">
                     </div>
                 </div>
 
@@ -116,10 +116,10 @@
                 <div class="form-group">
 
                     <div class="row">
-                        <input type="number" class="form-control col-4 ml-4 mr-2" id="cook" min="0" step="1" th:value="${cookH}"
+                        <input type="number" class="form-control col-4 ml-4 mr-2" id="cook" min="0" step="1" th:value="${editDTO.getCookH()}"
                                name="cookH" placeholder="hours">
 
-                        <input type="number" class="form-control col-4" id="cookMin" name="cookM" min="0" max="59"  th:value="${recipe.getCookInMins()%60}"
+                        <input type="number" class="form-control col-4" id="cookMin" name="cookM" min="0" max="59"  th:value="${editDTO.getRecipe().getCookInMins()%60}"
                                placeholder="mins">
                     </div>
                 </div>
@@ -132,14 +132,14 @@
                            class="form-control"
                            id="keywords"
                            name="tagList"
-                           placeholder="Keywords" th:value="${keywords}">
+                           placeholder="Keywords" th:value="${editDTO.getKeywords()}">
                 </div>
 
 
                 <div class="form-group">
                     <div>Instructions
                         <button id="addRow" type="button" class="modifiedB">+</button></div>
-                    <div th:each="ins : ${recipe.getInstructions()}">
+                    <div th:each="ins : ${editDTO.getRecipe().getInstructions()}">
                         <input type="text" name="instructions" class="form-control m-input" th:value="${ins.getDescription()}"
                                placeholder="Enter title" autocomplete="off">
                         <br>
@@ -153,7 +153,7 @@
                 </div>
 
                 <input type="hidden" name="author" th:value="${#request.getRemoteUser()}">
-                <input type="hidden" name="recipeId" th:value="${recipe.getId()}">
+                <input type="hidden" name="recipeId" th:value="${editDTO.getRecipe().getId()}">
                 <button type="submit" class="btn formBtnJump rounded-0 mt-2 btn-block">SAVE CHANGES</button>
 
 

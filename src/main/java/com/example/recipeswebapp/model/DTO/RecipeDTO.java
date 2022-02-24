@@ -26,10 +26,10 @@ public class RecipeDTO {
     private List<String> instructions;
 
     @NotNull
-    private Meal meal;
+    private Long meal;
 
     @NotNull
-    private Cuisine cuisine;
+    private Long cuisine;
 
 
     @NotNull
@@ -37,7 +37,7 @@ public class RecipeDTO {
 
 
    @NotEmpty
-    private List<SpecialConsideration> considerations;
+    private List<Long> considerations;
 
     @NotNull
     private List<String> ingredientNames;

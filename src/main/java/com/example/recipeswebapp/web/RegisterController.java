@@ -2,6 +2,7 @@ package com.example.recipeswebapp.web;
 
 
 import com.example.recipeswebapp.model.Identity.Role;
+import com.example.recipeswebapp.model.exceptions.PasswordsDoNotMatchException;
 import com.example.recipeswebapp.service.interfaces.UserService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
@@ -23,12 +24,12 @@ public class RegisterController {
 
 
     @GetMapping
-    public String getRegisterPage(@RequestParam(required = false) String error, Model model){
-        if(error!=null && !error.isEmpty()){
-            model.addAttribute("hasError",true);
-            model.addAttribute("error",error);
+    public String getRegisterPage(@RequestParam(required = false) String error, Model model) {
+        if (error != null && !error.isEmpty()) {
+            model.addAttribute("hasError", true);
+            model.addAttribute("error", error);
         }
-       /* model.addAttribute("bodyContent","register"); //register.html ja davame vsushnost*/
+
         return "register";
 
     }
@@ -39,14 +40,17 @@ public class RegisterController {
                            @RequestParam String password,
                            @RequestParam String repeatPassword,
                            @RequestParam String name,
-                           @RequestParam String surname){
-        try{
-            userService.register(username, email, password, repeatPassword, name, surname, Role.ROLE_USER);
-            //po default da bide USER! Vo aud mozhe da bira
+                           @RequestParam String surname) {
 
-            return "redirect:/login";
-        }catch (BadCredentialsException exception){
-            return "redirect:/register?error="+exception.getMessage();
-        }
+            try {
+                userService.register(username, email, password, repeatPassword, name, surname, Role.ROLE_USER);
+
+
+                return "redirect:/login";
+            } catch (PasswordsDoNotMatchException exception) {
+
+                return "redirect:/register?error=" + exception.getMessage();
+            }
+
     }
 }

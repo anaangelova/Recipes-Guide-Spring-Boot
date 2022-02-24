@@ -38,7 +38,7 @@
                         <select name="meal" class="form-control">
 
                             <option
-                                    th:each="meal : ${meals}"
+                                    th:each="meal : ${dto.getAllMeals()}"
                                     th:value="${meal.getId()}"
                                     th:text="${meal.getName()}">
                             </option>
@@ -50,7 +50,7 @@
                         <select name="cuisine" class="form-control">
 
                             <option
-                                    th:each="cuisine : ${cuisines}"
+                                    th:each="cuisine : ${dto.getAllCuisines()}"
                                     th:value="${cuisine.getId()}"
                                     th:text="${cuisine.getName()}">
                             </option>
@@ -58,7 +58,7 @@
                     </div>
                 </div >
                 <div class="mt-4 mb-2">Special Considerations</div>
-                <div class="form-group form-check-inline " th:each="sc : ${specs}">
+                <div class="form-group form-check-inline " th:each="sc : ${dto.getAllCons()}">
 
                     <label>
                         <input type="checkbox" name="considerations" class="form-control form-check-input "
@@ -75,7 +75,7 @@
                     <select name="ingredientMeasurements" class="form-control mr-2">
 
                         <option
-                                th:each="measurement : ${measurements}"
+                                th:each="measurement : ${dto.getAllMeasurements()}"
                                 th:value="${measurement.toString()}"
                                 th:text="${measurement.toString()}">
                         </option>
@@ -177,7 +177,7 @@
     $("#addRowIngr").click(function () {
 
         var modelAttributeValue = [[${measurements}]];
-        console.log(modelAttributeValue.length);
+
         var html = '';
         html += '<div id="inputFormRow">';
         html += '<div class="input-group mb-3">';

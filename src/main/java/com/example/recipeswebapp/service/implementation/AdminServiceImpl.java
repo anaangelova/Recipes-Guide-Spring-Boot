@@ -3,6 +3,7 @@ package com.example.recipeswebapp.service.implementation;
 
 import com.example.recipeswebapp.model.Recipe;
 import com.example.recipeswebapp.model.RecipeStatus;
+import com.example.recipeswebapp.model.exceptions.RecipeNotFoundException;
 import com.example.recipeswebapp.repository.RecipeRepository;
 import com.example.recipeswebapp.service.interfaces.AdminService;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     @Override
     public boolean approveRecipe(Long id) {
-        Recipe toApprove=recipeRepository.findById(id).orElseThrow();
+        Recipe toApprove=recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException(id));
         toApprove.setStatus(RecipeStatus.APPROVED);
         recipeRepository.save(toApprove);
         return true;
@@ -29,7 +30,7 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     @Override
     public boolean denyRecipe(Long id) {
-        Recipe toApprove=recipeRepository.findById(id).orElseThrow();
+        Recipe toApprove=recipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException(id));
         toApprove.setStatus(RecipeStatus.DENIED);
         recipeRepository.save(toApprove);
         return true;
