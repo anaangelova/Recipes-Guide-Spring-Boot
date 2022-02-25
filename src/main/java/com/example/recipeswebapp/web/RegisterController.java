@@ -1,6 +1,7 @@
 package com.example.recipeswebapp.web;
 
 
+import com.example.recipeswebapp.model.DTO.UserRegistrationDTO;
 import com.example.recipeswebapp.model.Identity.Role;
 import com.example.recipeswebapp.model.exceptions.PasswordsDoNotMatchException;
 import com.example.recipeswebapp.service.interfaces.UserService;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/register")
@@ -35,22 +38,10 @@ public class RegisterController {
     }
 
     @PostMapping
-    public String register(@RequestParam String username,
-                           @RequestParam String email,
-                           @RequestParam String password,
-                           @RequestParam  String repeatPassword,
-                           @RequestParam String name,
-                           @RequestParam String surname) {
+    public String register(@Valid UserRegistrationDTO dto) {
 
-            try {
-                userService.register(username, email, password, repeatPassword, name, surname, Role.ROLE_USER);
-
-
-                return "redirect:/login";
-            } catch (PasswordsDoNotMatchException exception) {
-
-                return "redirect:/register?error=" + exception.getMessage();
-            }
+        userService.register(dto.getUsername(), dto.getEmail(), dto.getPassword(), dto.getRepeatPassword(), dto.getName(), dto.getSurname(), Role.ROLE_USER);
+        return "redirect:/login";
 
     }
 }
