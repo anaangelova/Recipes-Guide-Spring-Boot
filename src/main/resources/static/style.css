@@ -580,7 +580,7 @@ transform: scale(1.1);
 
 .subscribe {
     font-size: calc(25px + (35 - 14) * ((100vw - 300px) / (1600 - 300)));
-    background-color: rgba(188, 143, 143, 0.4);
+    background-color: rgba(188, 143, 143, 0.2);
 
 
 }
@@ -623,7 +623,7 @@ transform: scale(1.1);
 .input-button:hover {
     background-color: whitesmoke;
     border: 1px solid rgb(255, 216, 211);
-    color: #a16868;
+    color: red;
 }
 
 .copyright {
@@ -649,7 +649,8 @@ transform: scale(1.1);
 .line {
     width: 95%;
     margin: 0 auto;
-    border: 1px solid #9e7878;
+    border-top: 1px solid #9e7878;
+
 }
 
 .card-info {

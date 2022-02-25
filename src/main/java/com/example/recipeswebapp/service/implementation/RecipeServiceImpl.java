@@ -248,6 +248,17 @@ public class RecipeServiceImpl implements RecipeService {
                 yield new ArrayList<>();
 
             }
+            case "tags" -> {
+                List<Recipe> aggregate=new ArrayList<>();
+                aggregate.addAll(recipeRepository.findAllByMeal_NameContainingIgnoreCaseAndStatus(val,RecipeStatus.APPROVED));
+                aggregate.addAll(recipeRepository.findAllByCuisine_NameContainingIgnoreCaseAndStatus(val,RecipeStatus.APPROVED));
+                if(tagRepository.findByNameIgnoreCase(val).isPresent()){
+                    Tag tag=tagRepository.findByNameIgnoreCase(val).get();
+                    aggregate.addAll(recipeRepository.findAllByTagListContains(tag));
+                }
+
+                yield aggregate;
+            }
            default ->  new ArrayList<>();
         };
 

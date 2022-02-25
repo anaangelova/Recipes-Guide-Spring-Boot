@@ -39,11 +39,14 @@ public class RecipesController {
     }
 
     @GetMapping()
-    public String getAllRecipes(Model model){
+    public String getAllRecipes(@RequestParam(required = false) boolean subscribed,
+                                Model model){
+
         List<Recipe> mostRecent=recipeService.findAllRecipesApprovedAndMostRecent();
         List<Recipe> trending=recipeService.findAllRecipesApprovedAndTrending();
         model.addAttribute("recents",mostRecent);
         model.addAttribute("trendings",trending);
+        if(subscribed) model.addAttribute("subscribed",true);
 
         return "recipes";
     }

@@ -15,7 +15,7 @@
         <div class="col-9">
 
              <span th:each="t : ${detailsDTO.getAllTags()}">
-            <a href="#dynamicallyGenerated" th:text="${t.toString()}"
+            <a th:href="@{'/recipes/{cat}/{val}' (cat=${'tags'} , val=${t})}" th:text="${t}"
                class="btn my-3 ms-0 px-3 py-1 buy-tickets rounded mr-4"></a>
         </span>
         </div>
