@@ -16,7 +16,7 @@ public class CustomUsernamePasswordAuthenticationProvider implements Authenticat
 
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
-    //user service dependency!!
+
 
     public CustomUsernamePasswordAuthenticationProvider(PasswordEncoder passwordEncoder, UserService userService) {
         this.passwordEncoder = passwordEncoder;
@@ -25,7 +25,7 @@ public class CustomUsernamePasswordAuthenticationProvider implements Authenticat
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        //se povikuva pri post do login endpoint-ot!
+
         String username=authentication.getName();
         String password=authentication.getCredentials().toString();
 
@@ -33,7 +33,7 @@ public class CustomUsernamePasswordAuthenticationProvider implements Authenticat
             throw new BadCredentialsException("Invalid Credentials");
         }
 
-        UserDetails userDetails = this.userService.loadUserByUsername(username); //go imame objektot za korisnikot
+        UserDetails userDetails = this.userService.loadUserByUsername(username);
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("Password is incorrect!");

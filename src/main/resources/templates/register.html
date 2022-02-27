@@ -13,9 +13,11 @@
         <form class="form-signin col-8 " method="post" action="/register">
             <h2 class="form-signin-heading text-center login-title mb-0 pb-0 mt-3">Create Account</h2>
             <div class="text-center mb-4 mt-0">
-                <a class="btn btn-outline-dark rounded-circle mr-3" href="#"><i class="fa-brands fa-google"></i></a>
-                <a class="btn btn-outline-dark rounded-circle mr-3" href="#"><i class="fa-brands fa-twitter"></i></a>
-                <a class="btn btn-outline-dark rounded-circle" href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                <a class="btn btn-outline-dark rounded-circle mr-3" th:href="@{/oauth2/authorization/google}"><i class="fa-brands fa-google"></i>
+
+                </a>
+                <a class="btn btn-outline-dark rounded-circle"  th:href="@{/oauth2/authorization/facebook}"><i class="fa-brands fa-facebook-f"></i></a>
+
 
             </div>
             <div class="form-row">

@@ -59,6 +59,8 @@
 .modifiedB{
     background-color: transparent;
     border: none;
+    font-weight: bold;
+    color: red;
 }
 .removeModified{
     background-color: transparent;
@@ -336,7 +338,7 @@ transform: scale(1.1);
     background-color: #fefefa;
     border: none;
     font-size: 2vw;
-    width: 5.7em;
+    width: 6.2em;
 }
 
 .dd-item {

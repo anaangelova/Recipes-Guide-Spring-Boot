@@ -61,7 +61,7 @@ public class RecipesController {
         return "add-recipe";
     }
 
-    @PostMapping("/addRecipe") //dali rabote validacijata???
+    @PostMapping("/addRecipe")
     public String addRecipePost(@Valid RecipeDTO recipeAdded, @RequestPart List<MultipartFile> images) throws IOException {
         List<String> imagesNames=this.saveImages(images);
         recipeService.save(recipeAdded,imagesNames);
@@ -78,11 +78,12 @@ public class RecipesController {
     }
 
     @GetMapping("/search")
-    public String searchForResults(@RequestParam String searchInput){
+    public String searchForResults(@RequestParam String searchInput, Model model){
 
         List<Recipe> recipes=recipeService.findBySearch(searchInput);
-
-        return "redirect:/recipes";
+        model.addAttribute("recipes",recipes);
+        model.addAttribute("val",searchInput);
+        return "recipes-category";
     }
 
     @GetMapping("/myRecipes/{id}")
