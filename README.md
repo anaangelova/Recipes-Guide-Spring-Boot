@@ -7,3 +7,5 @@ All authenticated users can add, delete, edit their recipes, save other user's r
 All users (authenticated and unauthenticated) can subscribe with their email to the website's newsletter and as a result they get an email message for successful registration (this was implemented using <b><i>Spring Mail and JavaMailSender</i></b>) <br><br>
 The admin user is responsible for approving or dismissing the pending recipes. In other words, when a user adds new recipe they submit the recipe and wait for approval. While the recipe is pending, it is not shown anywhere except in the user's list of recipes. When the admin approves a recipe, that recipe becomes 'public' and is shown on home page and in all appropriate categories. If the admin dismisses a recipe, the recipe's author can make some changes and submit the recipe again for review. <br><br>
 <b><i>Thymeleaf</i></b> was used as a template engine and the technologies used for the front-end development are <b><i>HTML, CSS, Bootstrap and Javascript</i></b>.
+<br><br>
+You can check out this short demo for the application: https://youtu.be/bn18nzeozA8

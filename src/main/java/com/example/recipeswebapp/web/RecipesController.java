@@ -62,10 +62,10 @@ public class RecipesController {
     }
 
     @PostMapping("/addRecipe")
-    public String addRecipePost(@Valid RecipeDTO recipeAdded, @RequestPart List<MultipartFile> images) throws IOException {
+    public String addRecipePost(@Valid RecipeDTO recipeAdded, @RequestPart List<MultipartFile> images, HttpServletRequest request) throws IOException {
         List<String> imagesNames=this.saveImages(images);
         recipeService.save(recipeAdded,imagesNames);
-        return "redirect:/recipes";
+        return "redirect:/recipes/myRecipes/"+request.getRemoteUser();
     }
 
     @GetMapping("/details/{id}")
