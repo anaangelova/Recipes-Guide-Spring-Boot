@@ -41,7 +41,7 @@
 
             <div class="card h-100 w-100 ">
                 <a th:href="@{'/recipes/details/{id}' (id=${rec.getId()})}">
-                    <img th:src="@{${'/images/' + rec.getImages().get(0).getTitle()}}" class="card-img-top rounded-0"
+                    <img th:src="@{${'/uploads/' + rec.getImages().get(0).getTitle()}}" class="card-img-top rounded-0"
                          alt="...">
                 </a>
                 <div class="card-body rounded-0 p-3">
@@ -68,7 +68,7 @@
 
             <div class="card h-100 w-100 ">
                 <a th:href="@{'/recipes/details/{id}' (id=${rec.getId()})}">
-                    <img th:src="@{${'/images/' + rec.getImages().get(0).getTitle()}}" class="card-img-top rounded-0"
+                    <img th:src="@{${'/uploads/' + rec.getImages().get(0).getTitle()}}" class="card-img-top rounded-0"
                          alt="...">
                 </a>
                 <div class="card-body rounded-0 p-3">

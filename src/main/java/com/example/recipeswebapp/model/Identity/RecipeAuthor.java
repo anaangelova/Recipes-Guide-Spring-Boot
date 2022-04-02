@@ -23,6 +23,7 @@ public class RecipeAuthor implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
+
     @Enumerated(value = EnumType.STRING)
     private Role role;
 

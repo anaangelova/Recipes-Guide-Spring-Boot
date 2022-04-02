@@ -51,7 +51,8 @@
                             <tr th:each="recipe, iStat : ${recipes}" class="text-center tableTextInf font-weight-lighter">
                                 <td th:text="${iStat.index+1}"></td>
                                 <td> <div class="cat text-center">
-                                    <a th:href="@{'/recipes/details/{id}' (id=${recipe.getId()})}"><img th:src="@{${'/images/' + recipe.getImages().get(0).getTitle()}}" alt="..." class="image-tumbnail"></a>
+                                    <a th:href="@{'/recipes/details/{id}' (id=${recipe.getId()})}">
+                                        <img th:src="@{${'/uploads/' + recipe.getImages().get(0).getTitle()}}" alt="..." class="image-tumbnail"></a>
 
                                 </div></td>
                                 <td th:text="${recipe.getTitle()}"></td>
@@ -112,7 +113,7 @@
                             <tr th:each="recipe, iStat : ${author.getSavedRecipes()}" class="text-center tableTextInf font-weight-lighter">
                                 <td th:text="${iStat.index+1}"></td>
                                 <td> <div class="cat text-center">
-                                    <a th:href="@{'/recipes/details/{id}' (id=${recipe.getId()})}"><img th:src="@{${'/images/' + recipe.getImages().get(0).getTitle()}}" alt="..." class="image-tumbnail"></a>
+                                    <a th:href="@{'/recipes/details/{id}' (id=${recipe.getId()})}"><img th:src="@{${'/uploads/' + recipe.getImages().get(0).getTitle()}}" alt="..." class="image-tumbnail"></a>
 
                                 </div></td>
                                 <td th:text="${recipe.getTitle()}"></td>
@@ -168,7 +169,7 @@
                             <tr th:each="recipe, iStat : ${pending}" class="text-center tableTextInf font-weight-lighter">
                                 <td th:text="${iStat.index+1}"></td>
                                 <td> <div class="cat text-center">
-                                    <a th:href="@{'/recipes/details/{id}' (id=${recipe.getId()})}"><img th:src="@{${'/images/' + recipe.getImages().get(0).getTitle()}}" alt="..." class="image-tumbnail"></a>
+                                    <a th:href="@{'/recipes/details/{id}' (id=${recipe.getId()})}"><img th:src="@{${'/uploads/' + recipe.getImages().get(0).getTitle()}}" alt="..." class="image-tumbnail"></a>
 
                                 </div></td>
                                 <td th:text="${recipe.getTitle()}"></td>

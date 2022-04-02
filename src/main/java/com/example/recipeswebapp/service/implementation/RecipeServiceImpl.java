@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -274,6 +275,7 @@ public class RecipeServiceImpl implements RecipeService {
         });
         recipeToAdd.setTagList(tags);
 
+        
         //M:N
         if (recipeDTO.getConsiderations().size() > 0) {
             List<SpecialConsideration> consTmp = specialConsiderationRepository

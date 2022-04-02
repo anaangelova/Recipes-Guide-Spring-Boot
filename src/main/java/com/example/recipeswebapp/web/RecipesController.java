@@ -63,7 +63,9 @@ public class RecipesController {
 
     @PostMapping("/addRecipe")
     public String addRecipePost(@Valid RecipeDTO recipeAdded, @RequestPart List<MultipartFile> images, HttpServletRequest request) throws IOException {
-        List<String> imagesNames=this.saveImages(images);
+        //List<String> imagesNames=this.saveImages(images);
+
+        List<String> imagesNames= Collections.singletonList(this.saveImage(images.get(0)));
         recipeService.save(recipeAdded,imagesNames);
         return "redirect:/recipes/myRecipes/"+request.getRemoteUser();
     }
@@ -180,11 +182,20 @@ public class RecipesController {
         return new ContentDTO(allMeals,allCuisines,allCons,allMeasurements);
     }
 
+    private String saveImage(MultipartFile img) throws IOException {
+        String imgName = img.getOriginalFilename();
+        File fileToUpload = new File("uploads/" + imgName);
+        fileToUpload.createNewFile();
+        FileOutputStream fileOutputStream = new FileOutputStream(fileToUpload);
+        fileOutputStream.write(img.getBytes());
+        fileOutputStream.close();
+        return img.getOriginalFilename();
+    }
     private List<String> saveImages(List<MultipartFile> images) throws IOException {
         String path="";
         List<String> imagesNames=new ArrayList<>();
         for(MultipartFile m: images){
-            path = "C:\\Users\\Latinka\\IdeaProjects\\RecipesWebApp\\src\\main\\resources\\static\\images\\"+m.getOriginalFilename();
+            path = "uploads/"+m.getOriginalFilename();
             File newFile = new File(path);
             newFile.createNewFile();
             FileOutputStream myfile = new FileOutputStream(newFile);
@@ -220,4 +231,6 @@ public class RecipesController {
         int cookH= (int) (toEdit.getCookInMins()/60);
         return new EditDTO(toEdit,keywordsS,prepH,cookH);
     }
+
+
 }
